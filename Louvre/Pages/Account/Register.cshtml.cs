@@ -55,12 +55,12 @@ namespace Louvre.Pages
         public PersonalInfo_Client PersonalInfo { get; set; }
         public PersonalInfoAddress_Client Address { get; set; }
 
-        public List<IFormFile> EmpDocuments { get; set; }
-        public List<IFormFile> EmpDocuments2 { get; set; }
+        public List<IFormFile>? EmpDocuments { get; set; }
+        public List<IFormFile>? EmpDocuments2 { get; set; }
         public List<DocumentPostViewModel> EmployeeDocuments { get; set; }
 
-        public List<IFormFile> CompDocuments { get; set; }
-        public List<IFormFile> CompDocuments2 { get; set; }
+        public List<IFormFile>? CompDocuments { get; set; }
+        public List<IFormFile>? CompDocuments2 { get; set; }
         public List<DocumentPostViewModel> CompanyDocuments { get; set; }
         public int ModuleID { get; set; }
         public string? DesignationName { get; set; }

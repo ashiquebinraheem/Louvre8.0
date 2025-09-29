@@ -41,7 +41,7 @@ namespace Louvre.Pages
         public RequesterPostViewModel Employee { get; set; }
         public Company Company { get; set; }
         public List<RequestMeterial> Meterials { get; set; }
-        public List<IFormFile> MeterialMedias { get; set; }
+        public List<IFormFile>? MeterialMedias { get; set; }
         public List<MeterialFileViewModel> MeterialFiles { get; set; }=new List<MeterialFileViewModel>();
 
         //public List<RequestVehicle> Vehicles { get; set; }
@@ -49,22 +49,22 @@ namespace Louvre.Pages
 
         public List<RequestPassenger> Passengers { get; set; }
 
-        public List<IFormFile> EmpDocuments { get; set; }
-        public List<IFormFile> EmpDocuments2 { get; set; }
+        public List<IFormFile>? EmpDocuments { get; set; }
+        public List<IFormFile>? EmpDocuments2 { get; set; }
         public List<DocumentPostViewModel> EmployeeDocuments { get; set; }
 
         public Vehicle Vehicle { get; set; }
-        public List<IFormFile> VehDocuments { get; set; }
-        public List<IFormFile> VehDocuments2 { get; set; }
+        public List<IFormFile>? VehDocuments { get; set; }
+        public List<IFormFile>? VehDocuments2 { get; set; }
         public List<DocumentPostViewModel> VehicleDocuments { get; set; }
 
 
-        public List<IFormFile> CompDocuments { get; set; }
-        public List<IFormFile> CompDocuments2 { get; set; }
+        public List<IFormFile>? CompDocuments { get; set; }
+        public List<IFormFile>? CompDocuments2 { get; set; }
         public List<DocumentPostViewModel> CompanyDocuments { get; set; }
 
-        public List<IFormFile> ReqDocuments { get; set; }
-        public List<IFormFile> ReqDocuments2 { get; set; }
+        public List<IFormFile>? ReqDocuments { get; set; }
+        public List<IFormFile>? ReqDocuments2 { get; set; }
 
         public List<DocumentPostViewModel> RequestDocuments { get; set; }
 

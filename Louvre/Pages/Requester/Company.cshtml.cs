@@ -35,8 +35,8 @@ namespace Louvre.Pages
 
         public Louvre.Shared.Core.Company Data { get; set; }
 
-        public List<IFormFile> DocumentFiles { get; set; }
-        public List<IFormFile> DocumentFiles2 { get; set; }
+        public List<IFormFile>? DocumentFiles { get; set; }
+        public List<IFormFile>? DocumentFiles2 { get; set; }
         public List<DocumentPostViewModel> Documents { get; set; }
         public async Task OnGetAsync(int? id)
         {

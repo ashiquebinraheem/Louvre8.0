@@ -38,8 +38,8 @@ namespace Louvre.Pages
 
         public string? DesignationName { get; set; }
 
-        public List<IFormFile> DocumentFiles { get; set; }
-        public List<IFormFile> DocumentFiles2 { get; set; }
+        public List<IFormFile>? DocumentFiles { get; set; }
+        public List<IFormFile>? DocumentFiles2 { get; set; }
 
         public List<DocumentPostViewModel> Documents { get; set; }
         public async Task OnGetAsync(int? id)

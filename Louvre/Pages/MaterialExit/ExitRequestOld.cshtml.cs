@@ -46,18 +46,18 @@ namespace Louvre.Pages
 
         public List<RequestPassenger> Passengers { get; set; }
 
-        public List<IFormFile> EmpDocuments { get; set; }
+        public List<IFormFile>? EmpDocuments { get; set; }
         public List<DocumentPostViewModel> EmployeeDocuments { get; set; }
 
         public Vehicle Vehicle { get; set; }
-        public List<IFormFile> VehDocuments { get; set; }
+        public List<IFormFile>? VehDocuments { get; set; }
         public List<DocumentPostViewModel> VehicleDocuments { get; set; }
 
 
-        public List<IFormFile> CompDocuments { get; set; }
+        public List<IFormFile>? CompDocuments { get; set; }
         public List<DocumentPostViewModel> CompanyDocuments { get; set; }
 
-        public List<IFormFile> ReqDocuments { get; set; }
+        public List<IFormFile>? ReqDocuments { get; set; }
         public List<DocumentPostViewModel> RequestDocuments { get; set; }
 
         public int CompanyID { get; set; }

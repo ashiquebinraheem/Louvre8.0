@@ -59,7 +59,7 @@ namespace Louvre.Pages
         public List<DocumentPostViewModel> VehicleDocuments { get; set; } = new List<DocumentPostViewModel>();
         public List<DocumentPostViewModel> DriverDocuments { get; set; } = new List<DocumentPostViewModel>();
         public List<DocumentPostViewModel> PassengerDocuments { get; set; } = new List<DocumentPostViewModel>();
-        public List<IFormFile> UploadedFiles { get; set; } = new List<IFormFile>();
+        public List<IFormFile>? UploadedFiles { get; set; } = new List<IFormFile>();
         public List<RequestItemModel> Spares { get; set; } = new List<RequestItemModel>();
         public List<RequestItemModel> Assets { get; set; } = new List<RequestItemModel>();
         public List<RequestItemModel> Consumables { get; set; } = new List<RequestItemModel>();
