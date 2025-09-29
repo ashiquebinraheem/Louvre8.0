@@ -22,14 +22,14 @@ namespace Louvre.Shared.Models
         public int? MediaID { get; set; }
         public bool IsUrl { get; set; }
         public string? MediaURL { get; set; }
-        public IFormFile MediaFile { get; set; }
+        public IFormFile? MediaFile { get; set; }
         public string? FileURL { get; set; }
     }
 
     public class MediaFileOnlyPostViewModel
     {
         public int? MediaID { get; set; }
-        public IFormFile MediaFile { get; set; }
+        public IFormFile? MediaFile { get; set; }
         public string? FileName { get; set; }
         public string? ContentType { get; set; }
     }

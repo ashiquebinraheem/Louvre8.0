@@ -10,7 +10,7 @@ namespace Louvre.Shared.Models
 		public int MeterialMediaID { get; set; }
 		public string? FileName { get; set; }
 
-        public IFormFile File { get; set; }
+        public IFormFile? File { get; set; }
         public int? MediaID { get; set; }
         public int RequestID { get; set; }
 

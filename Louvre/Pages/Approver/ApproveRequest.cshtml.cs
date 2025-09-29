@@ -66,40 +66,6 @@ namespace Louvre.Pages
         public int ApprovalCount { get; set; }
         #endregion
 
-        #region File Validation Helper
-        private void ValidateFile(IFormFile file, string fileName)
-        {
-            if (file == null)
-                return;
-
-            if (file.Length > maxFileSize)
-                throw new Exception(fileName + " exceeds maximum allowed size of 10 MB.");
-
-            var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
-            if (!allowedExtensions.Contains(ext))
-                throw new Exception(fileName + " has invalid file type. Allowed types: " + string.Join(", ", allowedExtensions));
-        }
-
-        private bool CanUploadFile(int userId)
-        {
-            lock (UserUploadHistory)
-            {
-                if (!UserUploadHistory.ContainsKey(userId))
-                    UserUploadHistory[userId] = new List<DateTime>();
-
-                // Remove timestamps older than 1 hour
-                UserUploadHistory[userId] = UserUploadHistory[userId].Where(t => t > DateTime.UtcNow.AddHours(-1)).ToList();
-
-                // Check limit
-                if (UserUploadHistory[userId].Count >= maxFilesPerHour)
-                    return false;
-
-                UserUploadHistory[userId].Add(DateTime.UtcNow);
-                return true;
-            }
-        }
-        #endregion
-
         #region OnGetAsync
         public async Task<IActionResult> OnGetAsync(int id)
         {
@@ -213,34 +179,6 @@ namespace Louvre.Pages
             return Page();
         }
         #endregion
-
-        #region File Upload Handling
-        //  //  -- Added By Abdul Razack for Denial of Service via Unrestricted File Upload Size and Rate
-        private async Task SaveFilesAsync(int requestId, List<MeterialFileViewModel> files, List<IFormFile> uploadedFiles)
-        {
-            if (!CanUploadFile(CurrentUserID))
-            {
-                _errorLogRepo.Log("User " + CurrentUserID + " exceeded upload limit.");
-                throw new Exception("Upload limit exceeded. Please try again later.");
-            }
-
-            foreach (var fileModel in files)
-            {
-                if (fileModel.File != null)
-                {
-                    ValidateFile(fileModel.File, fileModel.FileName);
-                    var result = await _mediaRepository.SaveMedia(fileModel.MediaID, fileModel.File, "meterial_files",
-                                                                   requestId + "_" + fileModel.FileName, null);
-
-                    if (!result.IsSuccess)
-                        _errorLogRepo.Log("Failed to save file " + fileModel.FileName + " for request " + requestId);
-
-                    fileModel.MediaID = result.IsSuccess ? result.MediaID : (int?)null;
-                }
-            }
-        }
-        #endregion
-
 
         public async Task<IActionResult> OnPostApproveAsync()
         {
