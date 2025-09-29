@@ -61,7 +61,7 @@ namespace Louvre.Pages
             #region Graph _MonthSummaryChart
 
             var slotBefore = Convert.ToInt32(await _dbContext.GetAsync<int>("Select SettingsValue From GeneralSettings Where SettingsKey=@SettingsKey", new { SettingsKey = "SlotSelectionBefore" }));
-            var clientDate = GetClientTime(_httpContextAccessor);
+            var clientDate = GetClientTime(_httpContextAccessor)!.Date;
             var fromDate = clientDate.AddDays(-1 * (31 - slotBefore));
             var toDate = clientDate.AddDays(slotBefore);
 
