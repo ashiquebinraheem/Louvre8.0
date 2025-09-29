@@ -1,0 +1,134 @@
+﻿@page "/report/schedule-list"
+@model Louvre.Pages.ScheduleListModel
+@{
+    ViewData["Title"] = "Schedule List";
+    ViewData["ParentMenu"] = "Report";
+    ViewData["PageURL"] = "report/schedule-list";
+}
+
+<form id="formSearch" method="post">
+    <div class="main-panel">
+        <div class="content">
+            <div class="page-inner">
+                <partial name="_BreadCrumb" />
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+
+                            <div class="card-header">
+                                <div class="d-flex align-items-center">
+                                    <h4 class="card-title">@ViewData["Title"]</h4>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+									<div id="add-row_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4">
+										<div class="row">
+											<div class="col-md-4">
+												<div class="form-group form-group-default">
+													<label>From Date</label>
+													<input type="date" class="form-control" asp-for="FromDate" />
+												</div>
+											</div>
+											<div class="col-md-4">
+												<div class="form-group form-group-default">
+													<label>From Date</label>
+													<input type="date" class="form-control" asp-for="ToDate" />
+												</div>
+											</div>
+											<div class="col-md-4">
+												<div class="form-group form-group-default">
+													<label>Request Mode</label>
+													<select class="form-control" asp-for="ModeID" asp-items="ViewBag.RequestModes">
+														<option value="0">-All-</option>
+													</select>
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-md-4">
+												<div class="form-group form-group-default">
+													<label>Company</label>
+													<select class="form-control" id="cmbBranch" asp-for="BranchID">
+													</select>
+												</div>
+											</div>
+
+											<div class="col-md-4">
+												<div class="form-group form-group-default">
+													<label>Sub Company</label>
+													<select class="form-control" asp-for="SubBranchID" id="cmbSubBranch">
+													</select>
+												</div>
+											</div>
+											<div class="col-md-4">
+												<div class="form-group form-group-default">
+													<label>Location</label>
+													<select class="form-control" asp-for="LocationID" asp-items="ViewBag.Locations">
+														<option value="0">-All-</option>
+													</select>
+												</div>
+											</div>
+										</div>
+										<partial name="_PaginationReport" />
+									</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script>
+
+    //#region Global Variables
+
+    var branches=[];
+
+    //#endregion
+
+    $(function () {
+
+        $(document).ready(function () {
+
+            branches =@Html.Raw(Json.Serialize(ViewData["Branches"]));
+            fillBranch();
+        });
+
+        //#region Branch
+
+        $("#cmbBranch").change(function () {
+            fillSubBranch();
+
+            if ($("#txtDate").val() != null) {
+                $("#txtDate").change();
+            }
+        });
+
+        fillBranch = function () {
+		    var cmb = $("#cmbBranch");
+		    cmb.empty();
+            cmb.append($("<option/>").val(null).html('-All-'));
+            $.each(branches, function () {
+                if(this.ParentBranchID==null)
+				    cmb.append($("<option/>").val(this['BranchID']).html(this['BranchName']));
+			});
+        }
+
+        fillSubBranch = function () {
+		    var cmb = $("#cmbSubBranch");
+		    cmb.empty();
+            cmb.append($("<option/>").val(null).html('-All-'));
+            $.each(branches, function () {
+                if(this.ParentBranchID==$("#cmbBranch").val())
+				    cmb.append($("<option/>").val(this['BranchID']).html(this['BranchName']));
+			});
+        }
+
+        //#endregion
+    });
+
+</script>

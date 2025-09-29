@@ -1,0 +1,12 @@
+﻿@page "/new-requesters"
+@model Louvre.Pages.NewRequestersModel
+@{
+    ViewData["Title"] = "New Requesters";
+    ViewData["ParentMenu"] = "Account";
+    ViewData["PageURL"] = "new-requesters";
+    ViewData["ItemPageURL"] = "approve-requester";
+    ViewData["ItemIDFieldName"] = "UserID";
+    ViewData["HideNewButton"] = true;
+}
+
+<partial name="_PaginationGrid"/>

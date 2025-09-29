@@ -1,0 +1,187 @@
+﻿<div class="row">
+    <div class="col-6">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Todays Material Summary</div>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <div id="chart"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Todays Scheduled Pass Summary</div>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <div id="dchart"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Material Request</div>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <div id="myChart" width="400" height="400"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Scheduled Request</div>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <div id="scheduledChart" width="400" height="400"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+<script>
+
+    var meterialRequestAccepted = @Html.Raw(Json.Serialize(ViewData["MeterialRequestAccepted"]));
+    var meterialRequestRequested = @Html.Raw(Json.Serialize(ViewData["MeterialRequestRequested"]));
+    var dates = @Html.Raw(Json.Serialize(ViewData["Dates"]));
+    var options = {
+        series: [{
+            name: 'Requested',
+            data: meterialRequestRequested
+        },
+        {
+            name: 'Accepted',
+            data: meterialRequestAccepted
+        }],
+        chart: {
+            height: 350,
+            type: 'area'
+        },
+        dataLabels: {
+            enabled: false
+        },
+        stroke: {
+            curve: 'smooth'
+        },
+        xaxis: {
+            type: 'datetime',
+            categories: dates//["2018-09-19T00:00:00.000Z", "2018-09-20T01:30:00.000Z", "2018-09-21T02:30:00.000Z", "2018-09-22T03:30:00.000Z", "2018-09-23T04:30:00.000Z", "2018-09-24T05:30:00.000Z", "2018-09-25T06:30:00.000Z"]
+        },
+        tooltip: {
+            x: {
+                format: 'dd/MM/yy HH:mm'
+            },
+        },
+    };
+
+    var chart = new ApexCharts(document.querySelector("#myChart"), options);
+    chart.render();
+
+
+</script>
+
+<script>
+
+    var meterialRequestAccepted = @Html.Raw(Json.Serialize(ViewData["DailyPassRequestAccepted"]));
+    var meterialRequestRequested = @Html.Raw(Json.Serialize(ViewData["DailyPassRequestRequested"]));
+    var dates = @Html.Raw(Json.Serialize(ViewData["Dates"]));
+    var options = {
+        series: [{
+            name: 'Requested',
+            data: meterialRequestRequested
+        },
+        {
+            name: 'Accepted',
+            data: meterialRequestAccepted
+        }],
+        chart: {
+            height: 350,
+            type: 'area'
+        },
+        dataLabels: {
+            enabled: false
+        },
+        stroke: {
+            curve: 'smooth'
+        },
+        xaxis: {
+            type: 'datetime',
+            categories: dates//["2018-09-19T00:00:00.000Z", "2018-09-20T01:30:00.000Z", "2018-09-21T02:30:00.000Z", "2018-09-22T03:30:00.000Z", "2018-09-23T04:30:00.000Z", "2018-09-24T05:30:00.000Z", "2018-09-25T06:30:00.000Z"]
+        },
+        tooltip: {
+            x: {
+                format: 'dd/MM/yy HH:mm'
+            },
+        },
+    };
+
+    var chart = new ApexCharts(document.querySelector("#scheduledChart"), options);
+    chart.render();
+
+
+</script>
+
+<script>
+
+    var options = {
+        series: [@Html.Raw(Json.Serialize(ViewData["NotArrived"])), @Html.Raw(Json.Serialize(ViewData["In"])), @Html.Raw(Json.Serialize(ViewData["Out"]))],
+        chart: {
+            width: 380,
+            type: 'pie',
+        },
+        labels: ['NotArrived', 'In', 'Out'],
+        responsive: [{
+            breakpoint: 480,
+            options: {
+                chart: {
+                    width: 200
+                },
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }]
+    };
+
+    var chart = new ApexCharts(document.querySelector("#chart"), options);
+    chart.render();
+</script>
+
+<script>
+
+    var options = {
+        series: [@Html.Raw(Json.Serialize(ViewData["DNotArrived"])), @Html.Raw(Json.Serialize(ViewData["DIn"])), @Html.Raw(Json.Serialize(ViewData["DOut"]))],
+        chart: {
+            width: 380,
+            type: 'pie',
+        },
+        labels: ['NotArrived', 'In', 'Out'],
+        responsive: [{
+            breakpoint: 480,
+            options: {
+                chart: {
+                    width: 200
+                },
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }]
+    };
+
+    var chart = new ApexCharts(document.querySelector("#dchart"), options);
+    chart.render();
+</script>

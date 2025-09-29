@@ -1,0 +1,313 @@
+﻿@page "/signup"
+@model Louvre.Pages.RegisterModel
+@{
+    ViewData["Title"] = "Signup";
+    Layout = "_LoginLayout";
+    ViewData["PageURL"] = "signup";
+    ViewData["MasterPageURL"] = "login";
+}
+
+<form method="post" id="formBasic" enctype="multipart/form-data">
+
+
+    <div class="container container-login animated fadeIn" style="width: 800px;">
+        <h3 class="text-center">Sign Up</h3>
+        <div class="login-form">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-check">
+                        <label class="form-radio-label">
+                            <input class="form-radio-input" type="radio" asp-for="UserTypeID" value="8" onclick="companySelected();" checked="checked">
+                            <span class="form-radio-sign"><b>Company</b></span>
+                        </label>
+                        <label class="form-radio-label ml-3">
+                            <input class="form-radio-input" type="radio" asp-for="UserTypeID" value="9" onclick="individualSelected();">
+                            <span class="form-radio-sign"><b>Individual</b></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-6" id="divPerson" style="display:none">
+                    <div class="form-group">
+                        <label for="txtName" class="placeholder"><b>Name</b></label>
+                        <input asp-for="PersonalInfo.FirstName" id="txtName" required type="text" class="form-control" autofocus>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="txtCompany" class="placeholder"><b>Company Name</b></label>
+                        <input asp-for="Company.CompanyName" id="txtCompany" required type="text" class="form-control">
+                    </div>
+                </div>
+                <div class="col-md-6" id="divDesignation" style="display:none">
+                    <div class="form-group">
+                        <label for="txtDesignationName" class="placeholder"><b>Designation</b></label>
+                        <input asp-for="DesignationName" id="txtDesignationName" required type="text" class="form-control">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <labels for="PersonalInfo_Email1" class="placeholder"><b>Email</b></labels>
+                        <input type="email" class="form-control" asp-for="PersonalInfo.Email1" required readonly onfocus="this.removeAttribute('readonly');">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="PersonalInfo_Phone1" class="placeholder"><b>Mobile</b></label>
+                        <input type="tel" class="form-control" asp-for="PersonalInfo.Phone1" required readonly onfocus="this.removeAttribute('readonly');">
+                    </div>
+                </div>
+
+                @*<div class="col-md-6" id="divVenodrID" style="display:none">
+                <div class="form-group">
+                <label for="txtVendorID" class="placeholder"><b>Unique Vendor ID</b></label>
+                <input asp-for="Company.VendorID" id="txtVendorID" type="text" class="form-control">
+                </div>
+                </div>*@
+
+                <div class="col-md-6" id="divContactPerson" style="display:none">
+                    <div class="form-group">
+                        <label for="txtContactPerson" class="placeholder"><b>Contact Person</b></label>
+                        <input asp-for="Company.ContactPerson" id="txtContactPerson" type="text" class="form-control">
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="txtFullAddress" class="placeholder"><b>Address</b></label>
+                        <input asp-for="Address.FullAddress" id="txtFullAddress" type="text" autocomplete="off" class="form-control">
+                    </div>
+                </div>
+
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="passwordsignin" class="placeholder"><b>Password</b></label>
+                        <div class="position-relative">
+                            <input asp-for="UserData.Password" type="password" class="form-control" required readonly onfocus="this.removeAttribute('readonly');">
+                            <div class="show-password">
+                                <i class="flaticon-interface"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="Type" class="placeholder"><b>Type</b></label>
+                        <select class="form-control" id="cmbModule" asp-for="ModuleID" asp-items="ViewBag.Modules">
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    @* <div class="form-group">
+                    <label for="PersonalInfo_Phone1" class="placeholder"><b>Host Email address</b></label>
+                    <input type="text" class="form-control" asp-for="HostDetail" required>
+                    </div> *@
+                </div>
+
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="Type" class="placeholder"><b>Justification</b></label>
+                        <textarea class="form-control" asp-for="UserData.Justification">
+                        </textarea>
+                    </div>
+                </div>
+
+
+
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="Type" class="placeholder"><b>Documents </b> (Supported Types: Jpg, Png, Pdf)</label>
+                    </div>
+                </div>
+
+                <div class="clearfix"></div>
+
+
+                <div id="divCompanyDocuments" style="padding-left: 25px;padding-right: 25px;">
+                    <div class="row">
+
+                        @for (int i = 0; i < Model.CompanyDocuments.Count; i++)
+                        {
+                            <input type="hidden" asp-for="@Model.CompanyDocuments[i].MediaID" />
+                            <input type="hidden" asp-for="@Model.CompanyDocuments[i].DocumentID" />
+                            <input type="hidden" asp-for="@Model.CompanyDocuments[i].DocumentTypeID" />
+                            <input type="hidden" id="HasCompFile_@i" asp-for="@Model.CompanyDocuments[i].HasFile" />
+                            <input type="hidden" id="HasCompFile2_@i" asp-for="@Model.CompanyDocuments[i].HasFile2" />
+
+                            <div class='col-md-6 '>
+                                <div class="form-group form-group-default">
+                                    <div class="row">
+                                        @* <div class="pl-3 pb-1 document-label">@Model.CompanyDocuments[i].DocumentTypeName</div>
+                                        <div class="col-12 d-flex">
+                                            <label class="pt-1" for="CompDocuments_@i">Front Side</label>
+                                            <input class="pl-2" type="file" accept="image/x-png,image/gif,image/jpeg,application/pdf" id="CompDocuments_@i" asp-for="CompDocuments" />
+                                        </div>
+                                        <div class="col-12 d-flex pt-1">
+                                            <label class="pt-1" for="CompDocuments2_@i">Back Side</label>
+                                            <input class="pl-2" type="file" accept="image/x-png,image/gif,image/jpeg,application/pdf" id="CompDocuments2_@i" asp-for="CompDocuments2" />
+                                        </div> *@
+                                    <div class="col-2 uplod-icon my-auto">
+                                <div class="image-upload">
+                                <label for="CompDocuments_@i"><i class="fa fa-file" style="font-size: 13px;">  </i> <span class=" uplod-text">Front</span></label>
+                                <input class="file-input" type="file" accept="image/x-png,image/gif,image/jpeg,application/pdf" id="CompDocuments_@i" asp-for="CompDocuments" onchange="showImage(this,'CompDocuments_Img_'+@i)" />
+                                </div>
+                                </div>
+                                <div class="col-2 uplod-icon my-auto">
+                                <div class="image-upload">
+                                <label for="CompDocuments2_@i"><i class="fa fa-file" style="font-size: 13px;"> </i> <span class=" uplod-text">Back</span></label>
+                                <input type="file" accept="image/x-png,image/gif,image/jpeg,application/pdf" id="CompDocuments2_@i" asp-for="CompDocuments2" onchange="showImage(this,'CompDocuments2_Img_'+@i)" />
+                                </div>
+                                </div>
+                                <div class="col-2"><div class="uplod-img my-auto photo-box shadow" id="CompDocuments_Img_@i" onclick="showImageInPopup(this)" data-toggle="modal" data-target="#photViewer" style="background:#eee no-repeat center center;background-image:url(@Model.CompanyDocuments[i].FileName)"></div></div>
+                                <div class="col-2"><div class="uplod-img my-auto photo-box shadow" id="CompDocuments2_Img_@i" onclick="showImageInPopup(this)" data-toggle="modal" data-target="#photViewer" style="background:#eee no-repeat center center;background-image:url(@Model.CompanyDocuments[i].FileName2)"></div></div>
+                               
+                                </div>
+                            </div>
+                        </div>
+                        <div class='col-md-3'>
+                            <div class="form-group form-group-default">
+                                <label>Document No</label>
+                                <input type="text" class="form-control" asp-for="CompanyDocuments[i].DocumentNumber" />
+                            </div>
+                        </div>
+                        <div class='col-md-3'>
+                            <div class="form-group form-group-default">
+                                <label>Expires On</label>
+                                <input type="date" class="form-control" asp-for="CompanyDocuments[i].ExpiresOn" />
+                            </div>
+                        </div>
+                        }
+                </div>
+            </div>
+
+            <div id="divEmployeeDocuments" style="padding-left: 25px;padding-right: 25px;">
+                <div class="row ">
+                        @for (int i = 0; i < Model.EmployeeDocuments.Count; i++)
+                        {
+                        <input type="hidden" asp-for="@Model.EmployeeDocuments[i].MediaID" />
+                        <input type="hidden" asp-for="@Model.EmployeeDocuments[i].DocumentID" />
+                        <input type="hidden" asp-for="@Model.EmployeeDocuments[i].DocumentTypeID" />
+                        <input type="hidden" id="HasEmpFile_@i" asp-for="@Model.EmployeeDocuments[i].HasFile" />
+                        <input type="hidden" id="HasEmpFile2_@i" asp-for="@Model.EmployeeDocuments[i].HasFile2" />
+
+                        <div class='col-md-6 '>
+                            <div class="form-group form-group-default">
+                                <div class="row">
+                                        @* <div class="pl-3 pb-1 document-label">@Model.EmployeeDocuments[i].DocumentTypeName</div>
+                                        <div class="col-12 d-flex">
+                                            <label class="pt-1" for="EmpDocuments_@i">Front Side</label>
+                                            <input class="pl-2" type="file" accept="image/x-png,image/gif,image/jpeg,application/pdf" id="EmpDocuments_@i" asp-for="EmpDocuments" />
+                                        </div>
+                                        <div class="col-12 d-flex pt-1">
+                                            <label class="pt-1" for="EmpDocuments2_@i">Back Side</label>
+                                            <input class="pl-2" type="file" accept="image/x-png,image/gif,image/jpeg,application/pdf" id="EmpDocuments2_@i" asp-for="EmpDocuments2" />
+                                        </div> *@
+
+                                    <div class="col-4 pl-2 document-label">@Model.EmployeeDocuments[i].DocumentTypeName</div>
+                                    <div class="col-2 uplod-icon my-auto">
+                                        <div class="image-upload">
+                                            <label for="EmpDocuments_@i"><i class="fa fa-file" style="font-size: 13px;"></i> <span class=" uplod-text">Front</span></label>
+                                            <input class="file-input" type="file" accept="image/x-png,image/gif,image/jpeg,application/pdf" id="EmpDocuments_@i" asp-for="EmpDocuments" onchange="showImage(this,'EmpDocuments_Img_'+@i)" />
+                                        </div>
+                                    </div>
+                                    <div class="col-2 uplod-icon my-auto">
+                                        <div class="image-upload">
+                                            <label for="EmpDocuments2_@i"><i class="fa fa-file" style="font-size: 13px;"> </i> <span class=" uplod-text">Back</span></label>
+                                            <input type="file" accept="image/x-png,image/gif,image/jpeg,application/pdf" id="EmpDocuments2_@i" asp-for="EmpDocuments2" onchange="showImage(this,'EmpDocuments2_Img_'+@i)" />
+                                        </div>
+                                    </div>
+                                    <div class="col-2"><div class="uplod-img my-auto photo-box shadow" id="EmpDocuments_Img_@i" onclick="showImageInPopup(this)" data-toggle="modal" data-target="#photViewer" style="background:#eee no-repeat center center;background-image:url(@Model.EmployeeDocuments[i].FileName)"></div></div>
+                                    <div class="col-2"><div class="uplod-img my-auto photo-box shadow" id="EmpDocuments2_Img_@i" onclick="showImageInPopup(this)" data-toggle="modal" data-target="#photViewer" style="background:#eee no-repeat center center;background-image:url(@Model.EmployeeDocuments[i].FileName2)"></div></div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div class='col-md-3'>
+                            <div class="form-group form-group-default">
+                                <label>Document No</label>
+                                <input type="text" class="form-control" asp-for="EmployeeDocuments[i].DocumentNumber" />
+                            </div>
+                        </div>
+                        <div class='col-md-3'>
+                            <div class="form-group form-group-default">
+                                <label>Expires On</label>
+                                <input type="date" class="form-control" asp-for="EmployeeDocuments[i].ExpiresOn" />
+                            </div>
+                        </div>
+                        }
+                </div>
+
+            </div>
+        </div>
+
+        <div class="row form-action">
+            <div class="col-md-6"></div>
+            <div class="col-md-3">
+                <a href="login" class="btn btn-danger btn-link w-100 fw-bold">Cancel</a>
+            </div>
+            <div class="col-md-3">
+                <input type="button" id="btnSave" value="Sign Up" class="btn btn-primary w-100 fw-bold" />
+            </div>
+            <partial name="_ErrorPartial" />
+        </div>
+
+            <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response" />
+    </div>
+    </div>
+</form>
+
+<script src="https://www.google.com/recaptcha/api.js?render=@Model.SiteKey"></script>
+<script>
+    grecaptcha.ready(function () {
+        grecaptcha.execute('@Model.SiteKey', { action: 'register' }).then(function (token) {
+            document.getElementById('g-recaptcha-response').value = token;
+        });
+    });
+</script>
+
+<script>
+    $(function () {
+
+        $(document).ready(function () {
+            companySelected();
+        });
+
+        companySelected = function () {
+            $('#divPerson').hide();
+            $('#divDesignation').hide();
+            $('#txtCompany').focus();
+            $('#txtName').removeAttr('required');
+            $("#divEmployeeDocuments").hide();
+            $("#divCompanyDocuments").show();
+            $("#divContactPerson").show();
+            $("#divVenodrID").show();
+        };
+
+        individualSelected = function () {
+            $('#divPerson').show();
+            $('#divDesignation').show();
+            $('#txtName').focus();
+            $('#txtName').attr('required', true);
+            $("#divEmployeeDocuments").show();
+            $("#divCompanyDocuments").hide();
+            $("#divContactPerson").hide();
+            $("#divVenodrID").hide();
+        };
+
+
+        $('#btnSave').click(function (evt) {
+
+            setHasImageField(@Model.CompanyDocuments.Count, 'CompDocuments', 'HasCompFile');
+            setHasImageField(@Model.EmployeeDocuments.Count, 'EmpDocuments', 'HasEmpFile');
+            setHasImageField(@Model.CompanyDocuments.Count, 'CompDocuments2', 'HasCompFile2');
+            setHasImageField(@Model.EmployeeDocuments.Count, 'EmpDocuments2', 'HasEmpFile2');
+
+            PostForm(evt, '/@ViewData["PageURL"]?handler=save', '#formBasic', "saved");
+        });
+
+        saved = function (data) {
+            successMessage(data.ResponseMessage, data.ResponseTitle, '@ViewData["MasterPageURL"]');
+        }
+    });
+</script>

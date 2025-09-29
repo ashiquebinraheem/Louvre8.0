@@ -1,0 +1,15 @@
+﻿<button type="button" id="btnDelete" class="btn btn-danger">Delete</button>
+
+<script>
+    $(function () {
+        $('#btnDelete').click(function (evt) {
+            if (confirm('Are you sure you want to delete?')) {
+                PostForm(evt, '/@ViewData["PageURL"]?handler=delete', '#formBasic', "deleted");
+            }
+        });
+
+        deleted = function () {
+            window.location.href = '/@ViewData["MasterPageURL"]';
+        }
+    });
+</script>

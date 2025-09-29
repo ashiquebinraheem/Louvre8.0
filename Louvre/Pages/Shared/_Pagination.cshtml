@@ -1,0 +1,147 @@
+﻿
+
+<div class="row">
+    <input type="hidden" name="SearchData.PageIndex" id="SearchData_CurrentPageIndex" />
+    <input type="hidden" name="SearchData.PageSize" id="SearchData_PageRowSize" />
+    <input type="hidden" name="SearchData.OrderByFieldName" id="SearchData_OrderByFieldName" />
+    <div class="col-sm-12 col-md-5">
+        <div class="dataTables_info" id="add-row_info" role="status" aria-live="polite"></div>
+    </div>
+    <div class="col-sm-12 col-md-7">
+        <div class="dataTables_paginate paging_simple_numbers" id="add-row_paginate">
+            <ul class="pagination" id="paginationLink">
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    var paginationSetLength = 5;
+    var paginationSetIndex = 0;
+    var entryCount = 10;
+    var toEntryCount;
+    var orderBy = "1 desc";
+
+    $(function () {
+
+        $(document).ready(function () {
+
+            $("#divEntriesCount").html(`<div class="dataTables_length">
+                            <label>
+                                Show
+                                <select name="cmbEntrylength" id="cmbEntrylength" onchange="cmbEntrylengthChanged();" aria-controls="add-row" class="form-control form-control-sm">
+                                    <option value="10" selected>10</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                </select> entries
+                            </label>
+                        </div>`);
+
+            entryCount = $("#cmbEntrylength").val();
+            
+        });
+
+        searchData = function () {
+            $("#SearchData_PageRowSize").val($("#cmbEntrylength").val());
+            $("#SearchData_OrderByFieldName").val(orderBy);
+            PostFormWithoutEvent(`/@ViewData["PageURL"]?handler=Search`, '#formSearch', "loadSearchResult");
+        }
+
+        loadPaginationResult = function (count, pageIndex) {
+            $("#SearchData_CurrentPageIndex").val(pageIndex);
+            searchData();
+        }
+
+        $("#btnSearch").click(function () {
+            searchData();
+        });
+
+        cmbEntrylengthChanged = function () {
+            $("#SearchData_CurrentPageIndex").val(1);
+            searchData();
+        };
+
+        changeOrderBy = function (cntrl, fieldName) {
+            if ($(cntrl).hasClass("sorting_asc")) {
+                $(cntrl).attr('class', 'sorting_desc');
+                fieldName += " asc";
+            }
+            else {
+                $(cntrl).attr('class', 'sorting_asc');
+                fieldName += " desc";
+            }
+            orderBy = fieldName;
+            searchData();
+        }
+
+        setPaginationLink = function (pageIndex, totalPages, pageSize, totalCount) {
+
+            $("#paginationLink").empty();
+
+            entryCount = $("#cmbEntrylength").val();
+
+            if (pageIndex * entryCount > totalCount)
+                toEntryCount = totalCount;
+            else
+                toEntryCount = pageIndex * entryCount;
+
+            $("#add-row_info").text(`Showing ${pageIndex * entryCount - entryCount + 1} to ${toEntryCount} of ${totalCount} entries`);
+
+            paginationSetIndex = parseInt((pageIndex - 1) / paginationSetLength);
+
+            if (pageIndex > paginationSetLength) {
+                $("#paginationLink").append(`
+                <li class="paginate_button page-item previous">
+                    <a onClick="loadPaginationResult(${pageSize},${1});" aria-controls="add-row" data-dt-idx="0" tabindex="0" class="page-link">&laquo;</a>
+                </li>
+                <li class="paginate_button page-item previous">
+                    <a onClick="loadPaginationResult(${pageSize},${pageIndex - paginationSetLength});" aria-controls="add-row" data-dt-idx="0" tabindex="0" class="page-link">&lt;</a>
+                </li>`);
+            }
+
+            var className = "";
+            for (var i = (paginationSetIndex * paginationSetLength) + 1, j = 0; j < paginationSetLength; i++ , j++) {
+
+                if (totalPages >= i) {
+
+                    if (i == pageIndex)
+                        className = "active";
+                    else
+                        className = "";
+
+                    $("#paginationLink").append(`<li class="paginate_button page-item ${className}">
+                    <a onClick="loadPaginationResult(${pageSize},${i});" aria-controls="add-row" data-dt-idx="1" tabindex="0" class="page-link">${i}</a>
+                </li>`);
+                }
+            }
+
+            if (totalPages - paginationSetLength > paginationSetIndex * paginationSetLength) {
+
+                var nextSet = pageIndex + paginationSetLength;
+                if (nextSet > totalPages)
+                    nextSet = totalPages;
+
+                $("#paginationLink").append(`
+                <li class="paginate_button page-item next">
+                    <a onClick="loadPaginationResult(${pageSize},${nextSet});" aria-controls="add-row" data-dt-idx="3" tabindex="0" class="page-link">&gt;</a>
+                </li>
+                <li class="paginate_button page-item next">
+                    <a onClick="loadPaginationResult(${pageSize},${totalPages});" aria-controls="add-row" data-dt-idx="3" tabindex="0" class="page-link">&raquo;</a>
+                </li>`);
+            }
+        };
+
+        $("#cmbEntrylength").change(function () {
+            $("#btnSearch").click();
+        });
+
+    });
+
+    $("#formSearch").submit(function() {
+        searchData();
+        return false;
+    });
+
+</script>

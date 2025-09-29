@@ -1,0 +1,767 @@
+﻿@page
+@using Louvre.Pages
+@model Louvre.Pages.HomeModel
+@{
+    ViewData["Title"] = "Home";
+    ViewData["PageURL"] = "home";
+}
+
+
+<div class="main-panel">
+    <div class="content">
+        <div class="page-inner">
+
+
+
+            <form method="post" id="formBasic" enctype="multipart/form-data">
+                <input type="hidden" asp-for="RequestStatusID" />
+                <input type="hidden" asp-for="CheckinStatus" />
+            </form>
+
+
+            @if (User.IsInRole("Super-Admin") || User.IsInRole("Administrator") || User.IsInRole("Approver") || User.IsInRole("Disposal") || User.IsInRole("Company") || User.IsInRole("Individual"))
+            {
+                <div class="page-header">
+                    <h4>Material Request</h4>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6 col-md-2" onclick="getRequestsDetail(0)">
+                        <div class="card card-stats card-round">
+                            <div class="card-body ">
+                                <div class="row align-items-center">
+                                    <div class="col-icon">
+                                        <div class="icon-big text-center icon-primary bubble-shadow-small">
+                                            <i class="fas flaticon-archive"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col col-stats ml-3 ml-sm-0">
+                                        <div class="numbers">
+                                            <p class="card-category">Requests</p>
+                                            <h4 class="card-title">@ViewData["TotalRequests"]</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-2" onclick="getRequestsDetail(1)">
+                        <div class="card card-stats card-round">
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col-icon">
+                                        <div class="icon-big text-center icon-warning bubble-shadow-small">
+                                            <i class="far flaticon-envelope-1"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col col-stats ml-3 ml-sm-0">
+                                        <div class="numbers">
+                                            <p class="card-category">Pending</p>
+                                            <h4 class="card-title">@ViewData["PendingRequests"]</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 col-md-2" onclick="getRequestsDetail(2)">
+                        <div class="card card-stats card-round">
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col-icon">
+                                        <div class="icon-big text-center icon-warning bubble-shadow-small">
+                                            <i class="fas fa-adjust"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col col-stats ml-3 ml-sm-0">
+                                        <div class="numbers">
+                                            <p class="card-category">Processing</p>
+                                            <h4 class="card-title">@ViewData["ProcessingRequests"]</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-sm-6 col-md-2" onclick="getRequestsDetail(4)">
+                        <div class="card card-stats card-round">
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col-icon">
+                                        <div class="icon-big text-center icon-success bubble-shadow-small">
+                                            <i class="far flaticon-hands"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col col-stats ml-3 ml-sm-0">
+                                        <div class="numbers">
+                                            <p class="card-category">Accepted</p>
+                                            <h4 class="card-title">@ViewData["AcceptedRequests"]</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 col-md-2" onclick="getRequestsDetail(6)">
+                        <div class="card card-stats card-round">
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col-icon">
+                                        <div class="icon-big text-center icon-success bubble-shadow-small">
+                                            <i class="fas fa-check-circle"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col col-stats ml-3 ml-sm-0">
+                                        <div class="numbers">
+                                            <p class="card-category">Completed</p>
+                                            <h4 class="card-title">@ViewData["CompletedRequests"]</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    @if (User.IsInRole("Company") || User.IsInRole("Individual"))
+                    {
+                        <div class="col-sm-6 col-md-2" onclick="getRejectRequestsDetail()">
+                            <div class="card card-stats card-round">
+                                <div class="card-body">
+                                    <div class="row align-items-center">
+                                        <div class="col-icon">
+                                            <div class="icon-big text-center icon-danger bubble-shadow-small">
+                                                <i class="far flaticon-hands-1"></i>
+                                            </div>
+                                        </div>
+                                        <div class="col col-stats ml-3 ml-sm-0">
+                                            <div class="numbers">
+                                                <p class="card-category">Rejected</p>
+                                                <h4 class="card-title">@ViewData["RejectedRequests"]</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="col-sm-6 col-md-2" onclick="getRequestsDetail(3)">
+                            <div class="card card-stats card-round">
+                                <div class="card-body">
+                                    <div class="row align-items-center">
+                                        <div class="col-icon">
+                                            <div class="icon-big text-center icon-danger bubble-shadow-small">
+                                                <i class="far flaticon-hands-1"></i>
+                                            </div>
+                                        </div>
+                                        <div class="col col-stats ml-3 ml-sm-0">
+                                            <div class="numbers">
+                                                <p class="card-category">Rejected</p>
+                                                <h4 class="card-title">@ViewData["RejectedRequests"]</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+
+                <div class="page-header">
+                    <h4>Scheduled Pass Request</h4>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-6 col-md-2" onclick="getDailyPassRequestsDetail(0)">
+                        <div class="card card-stats card-round">
+                            <div class="card-body ">
+                                <div class="row align-items-center">
+                                    <div class="col-icon">
+                                        <div class="icon-big text-center icon-primary bubble-shadow-small">
+                                            <i class="fas flaticon-archive"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col col-stats ml-3 ml-sm-0">
+                                        <div class="numbers">
+                                            <p class="card-category">Requests</p>
+                                            <h4 class="card-title">@ViewData["TotalDailyRequests"]</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-2" onclick="getDailyPassRequestsDetail(1)">
+                        <div class="card card-stats card-round">
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col-icon">
+                                        <div class="icon-big text-center icon-warning bubble-shadow-small">
+                                            <i class="far flaticon-envelope-1"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col col-stats ml-3 ml-sm-0">
+                                        <div class="numbers">
+                                            <p class="card-category">Pending</p>
+                                            <h4 class="card-title">@ViewData["PendingDailyPassRequests"]</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-2" onclick="getDailyPassRequestsDetail(2)">
+                        <div class="card card-stats card-round">
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col-icon">
+                                        <div class="icon-big text-center icon-warning bubble-shadow-small">
+                                            <i class="fas fa-adjust"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col col-stats ml-3 ml-sm-0">
+                                        <div class="numbers">
+                                            <p class="card-category">Processing</p>
+                                            <h4 class="card-title">@ViewData["ProcessingDailyPassRequests"]</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-2" onclick="getDailyPassRequestsDetail(4)">
+                        <div class="card card-stats card-round">
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col-icon">
+                                        <div class="icon-big text-center icon-success bubble-shadow-small">
+                                            <i class="far flaticon-hands"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col col-stats ml-3 ml-sm-0">
+                                        <div class="numbers">
+                                            <p class="card-category">Accepted</p>
+                                            <h4 class="card-title">@ViewData["AcceptedDailyPassRequests"]</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-2" onclick="getDailyPassRequestsDetail(6)">
+                        <div class="card card-stats card-round">
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col-icon">
+                                        <div class="icon-big text-center icon-success bubble-shadow-small">
+                                            <i class="fas fa-check-circle"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col col-stats ml-3 ml-sm-0">
+                                        <div class="numbers">
+                                            <p class="card-category">Completed</p>
+                                            <h4 class="card-title">@ViewData["CompletedDailyPassRequests"]</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-2" onclick="getDailyPassRequestsDetail(3)">
+                        <div class="card card-stats card-round">
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col-icon">
+                                        <div class="icon-big text-center icon-danger bubble-shadow-small">
+                                            <i class="far flaticon-hands-1"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col col-stats ml-3 ml-sm-0">
+                                        <div class="numbers">
+                                            <p class="card-category">Rejected</p>
+                                            <h4 class="card-title">@ViewData["RejectedDailyPassRequests"]</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            @if (User.IsInRole("Monitor") || User.IsInRole("Super-Admin") || User.IsInRole("Administrator") || User.IsInRole("Approver") || User.IsInRole("Disposal"))
+            {
+                <div class="page-header">
+                    <h4>Today's summary</h4>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-6 col-md-3" onclick="getCheckinDetail(0)">
+                        <div class="card card-stats card-round">
+                            <div class="card-body ">
+                                <div class="row align-items-center">
+                                    <div class="col-icon">
+                                        <div class="icon-big text-center icon-primary bubble-shadow-small">
+                                            <i class="fas fa-shipping-fast"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col col-stats ml-3 ml-sm-0">
+                                        <div class="numbers">
+                                            <p class="card-category">Today's Requesters</p>
+                                            <h4 class="card-title" id="txtTotalRequester">@ViewData["TodaysTotal"] - @ViewData["DTodaysTotal"]</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-3" onclick="getCheckinDetail(1)">
+                        <div class="card card-stats card-round">
+                            <div class="card-body ">
+                                <div class="row align-items-center">
+                                    <div class="col-icon">
+                                        <div class="icon-big text-center icon-danger bubble-shadow-small">
+                                            <i class="fas fa-shipping-fast"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col col-stats ml-3 ml-sm-0">
+                                        <div class="numbers">
+                                            <p class="card-category">Not arrived</p>
+                                            <h4 class="card-title" id="txtNotArrived">@ViewData["NotArrived"] - @ViewData["DNotArrived"]</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-3" onclick="getCheckinDetail(2)">
+                        <div class="card card-stats card-round">
+                            <div class="card-body ">
+                                <div class="row align-items-center">
+                                    <div class="col-icon">
+                                        <div class="icon-big text-center icon-warning bubble-shadow-small">
+                                            <i class="fas fa-shipping-fast"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col col-stats ml-3 ml-sm-0">
+                                        <div class="numbers">
+                                            <p class="card-category">In</p>
+                                            <h4 class="card-title" id="txtCheckIn">@ViewData["In"] - @ViewData["DIn"]</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-3" onclick="getCheckinDetail(3)">
+                        <div class="card card-stats card-round">
+                            <div class="card-body ">
+                                <div class="row align-items-center">
+                                    <div class="col-icon">
+                                        <div class="icon-big text-center icon-success bubble-shadow-small">
+                                            <i class="fas fa-shipping-fast"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col col-stats ml-3 ml-sm-0">
+                                        <div class="numbers">
+                                            <p class="card-category">Out</p>
+                                            <h4 class="card-title" id="txtCheckOut">@ViewData["Out"] - @ViewData["DOut"]</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            <div class="row">
+
+                @if (User.IsInRole("Monitor") || User.IsInRole("Super-Admin") || User.IsInRole("Administrator") || User.IsInRole("Approver") || User.IsInRole("Disposal"))
+                {
+                    <div class="col-md-12">
+                        <partial name="_MonthSummaryChart" />
+                    </div>
+                }
+
+                @if (User.IsInRole("Super-Admin") || User.IsInRole("Administrator") || User.IsInRole("Approver") || User.IsInRole("Disposal"))
+                {
+                    <div class="col-md-12">
+                        <partial name="_Calender" />
+                    </div>
+                }
+
+                @if (User.IsInRole("Employee"))
+                {
+                    <div class="col-md-12">
+                        <partial name="_Calender" />
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="detailPopup" tabindex="-1" role="dialog" aria-labelledby="newRejectPopupLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="max-width:1000px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Details</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div id="searchContainer" class="d-flex justify-content-end align-items-center p-2"">
+                <h4 class="mb-0 mr-2" style="display:none" id="lblSearch">Search</h4>
+                <input id="txtSearch" class="form-control" style="width: 200px;display:none" placeholder="Enter QR Code" />
+            </div>
+            <div class="modal-body" style="overflow-y: scroll;">
+                <div id="divDetails"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script>
+
+    var calenderDetails = [];
+
+    $(function () {
+
+        $(document).ready(function () {
+            calenderDetails = @Html.Raw(Json.Serialize(ViewData["CalenderDetails"]));
+            //GetDashboardData();
+        });
+
+        //#region Meterial
+
+        loadDetails = function (id, type) {
+
+            $("#detailPopup").modal('show');
+            var divContent = '';
+            if (type == 1) {//Request
+
+                divContent = `<table id="gridMeterial" class="table table-bordered table-head-bg-info table-bordered-bd-info" role="grid" aria-describedby="add-row_info">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Requester</th>
+                                                                <th>Mode</th>
+                                                                <th>Location</th>
+                                                                <th>Status</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>`;
+
+                $.each(calenderDetails, function () {
+                    if (this.SlotID == id) {
+                        divContent += `<tr>
+                                        <td>${this.EmployeeName}</td>
+                                        <td>${this.ModeName}</td>
+                                        <td>${this.LocationName}</td>
+                                        <td>${this.Status}</td>
+                                    </tr>`;
+                    }
+                });
+
+                divContent += `</tbody></table>`;
+            }
+
+            $("#divDetails").html(divContent);
+        }
+
+        getRequestsDetail = function (type) {
+            $("#RequestStatusID").val(type);
+            PostFormWithoutEvent('/@ViewData["PageURL"]?handler=getRequestsDetail', '#formBasic', "loadRequestsDetail");
+        };
+
+
+        loadRequestsDetail = function (data) {
+
+            $("#detailPopup").modal('show');
+            var divContent = `<table id="gridMeterial" class="table table-bordered table-head-bg-info table-bordered-bd-info" role="grid" aria-describedby="add-row_info">
+                            <thead>`;
+
+            switch ($("#RequestStatusID").val()) {//Accepted
+                case "3":
+                    divContent += `<tr>
+                                                <th>Request No</th>
+                                                <th>Request Date</th>
+                                                <th>Requester</th>
+                                                <th>Branch</th>
+                                                <th>Sub Branch</th>
+                                                <th>Slot</th>
+                                                <th>Location</th>
+                                                <th>Status</th>
+                                                <th>Request Type</th>
+                                                <th>Reject Reason</th>
+                                               </tr>
+                                            </thead>
+                                        <tbody>`;
+
+                    $.each(data, function () {
+                        divContent += `<tr onclick="viewRequest(${this.RequestID})">
+                                        <td>${this.RequestNo}</td>
+                                        <td>${this.Date}</td>
+                                        <td>${this.EmployeeName}</td>
+                                        <td>${this.BranchName}</td>
+                                        <td>${this.SubBranchName}</td>
+                                        <td>${this.Slot}</td>
+                                        <td>${this.LocationName}</td>
+                                        <td>${this.Status}</td>
+                                        <td>${this.RequestTypeName}</td>
+                                        <td>${this.Remarks}</td>
+                                    </tr>`;
+                    });
+                    break;
+                default:
+                    let showQRCode = data.some(item => item.QRCode); // Check if at least one QRCode exists
+
+                    divContent += `<tr>
+                    <th>Request No</th>
+                    <th>Request Date</th>
+                    <th>Requester</th>
+                    <th>Company</th>
+                    <th>Branch</th>
+                    <th>Sub Branch</th>
+                    <th>Slot</th>
+                    <th>Location</th>
+                    <th>Status</th>
+                    <th>Request Type</th>`;
+                    if (showQRCode) {
+
+                        divContent += `<th>QR Code</th>`;
+                    }
+                    divContent += `</tr></thead><tbody>`;
+
+                    $.each(data, function () {
+                        divContent += `<tr onclick="viewRequest(${this.RequestID})">
+                        <td>${this.RequestNo}</td>
+                        <td>${this.Date}</td>
+                        <td>${this.EmployeeName}</td>
+                        <td>${this.CompanyName}</td>
+                        <td>${this.BranchName}</td>
+                        <td>${this.SubBranchName}</td>
+                        <td>${this.Slot}</td>
+                        <td>${this.LocationName}</td>
+                        <td>${this.Status}</td>
+                        <td>${this.RequestTypeName}</td>`;
+                        if (showQRCode) {
+                            document.getElementById("lblSearch").style.display = "flex";
+                            document.getElementById("txtSearch").style.display = "flex";
+                            divContent += `<td>${this.QRCode}</td>`;
+                        } else {
+                            document.getElementById("lblSearch").style.setProperty("display", "none", "important");
+                            document.getElementById("txtSearch").style.setProperty("display", "none", "important");
+                        }
+
+                        divContent += `</tr>`;
+                    });
+
+                    break;
+            }
+            divContent += `</tbody></table>`;
+            $("#divDetails").html(divContent);
+        }
+        viewRequest = function (requestId) {
+            $("#detailPopup").modal('hide');
+            window.location.href = '/view-request/' + requestId;
+        }
+
+        //#endregion
+
+        //#region Rejected Request
+
+        getRejectRequestsDetail = function () {
+            $("#RequestStatusID").val(3);
+            PostFormWithoutEvent('/@ViewData["PageURL"]?handler=getRequestsDetail', '#formBasic', "loadRejectRequestsDetail");
+        };
+
+        loadRejectRequestsDetail = function (data) {
+
+            $("#detailPopup").modal('show');
+            var divContent = `<table id="gridMeterial" class="table table-bordered table-head-bg-info table-bordered-bd-info" role="grid" aria-describedby="add-row_info">
+                            <thead>
+                                <tr>
+                                    <th>Request No</th>
+                                    <th>Request Date</th>
+                                    <th>Requester</th>
+                                    <th>Branch</th>
+                                    <th>Sub Branch</th>
+                                    <th>Slot</th>
+                                    <th>Location</th>
+                                    <th>Status</th>
+                                    <th>Request Type</th>
+                                    <th>Reject Reason</th>
+                                    </tr>
+                                </thead>
+                            <tbody>`;
+
+            $.each(data, function () {
+                divContent += `<tr onclick="viewRejectedRequest(${this.RequestID},${this.RequestTypeID})">
+                                    <td>${this.RequestNo}</td>
+                                    <td>${this.Date}</td>
+                                    <td>${this.EmployeeName}</td>
+                                    <td>${this.BranchName}</td>
+                                    <td>${this.SubBranchName}</td>
+                                    <td>${this.Slot}</td>
+                                    <td>${this.LocationName}</td>
+                                    <td>${this.Status}</td>
+                                    <td>${this.RequestTypeName}</td>
+                                    <td>${this.Remarks}</td>
+                                </tr>`;
+            });
+            divContent += `</tbody></table>`;
+            $("#divDetails").html(divContent);
+        }
+
+        viewRejectedRequest = function (requestId, requestTypeID) {
+            $("#detailPopup").modal('hide');
+            if (requestTypeID == 3 || requestTypeID == 4)
+                window.location.href = '/material-exit-request/' + requestId;
+            else
+                window.location.href = '/material-entry-request/' + requestId;
+        }
+
+        //#endregion
+
+        //$("#cmbPeriod").change(function () {
+        //	GetDashboardData();
+        //})
+
+        //function GetDashboardData() {
+
+        //	var obj = {};
+        //	obj.Period = $("#cmbPeriod").val();
+
+        //	PostAPI(`/api/dashboard/get-dashboard-data`, obj, 'loadDashboardData');
+        //}
+
+        //loadDashboardData = function(data) {
+        //	$("#txtTotalRequester").text(data.SSFDashboard.TotalRequester);
+        //	$("#txtNotArrived").text(data.SSFDashboard.NotArrived);
+        //	$("#txtCheckIn").text(data.SSFDashboard.CheckIn);
+        //	$("#txtCheckOut").text(data.SSFDashboard.CheckOut);
+        //}
+
+        //#region Daily Pass Request
+
+
+        getDailyPassRequestsDetail = function (type) {
+            $("#RequestStatusID").val(type);
+            PostFormWithoutEvent('/@ViewData["PageURL"]?handler=getDailyPassRequestsDetail', '#formBasic', "loadDailyPassRequestsDetail");
+        };
+
+
+        loadDailyPassRequestsDetail = function (data) {
+
+            $("#detailPopup").modal('show');
+            var divContent = `<table id="gridMeterial" class="table table-bordered table-head-bg-info table-bordered-bd-info" role="grid" aria-describedby="add-row_info">
+                                <thead>`;
+            divContent += `<tr>
+                                                    <th>Request No</th>
+                                                    <th>From Date</th>
+                                                    <th>To Date</th>
+                                                    <th>Requester</th>
+                                                    <th>Company</th>
+                                                    <th>Branch</th>
+                                                    <th>Sub Branch</th>
+                                                    <th>Location</th>
+                                                    <th>Status</th>
+                                                    <th>Request Type</th>
+                                                   </tr>
+                                                </thead>
+                                            <tbody>`;
+
+            $.each(data, function () {
+                divContent += `<tr onclick="viewDailyPassRequest(${this.RequestID})">
+                                            <td>${this.RequestNo}</td>
+                                            <td>${this.Date}</td>
+                                                 <td>${this.ToDate}</td>
+                                            <td>${this.EmployeeName}</td>
+                                            <td>${this.CompanyName}</td>
+                                            <td>${this.BranchName}</td>
+                                            <td>${this.SubBranchName}</td>
+                                            <td>${this.LocationName}</td>
+                                            <td>${this.Status}</td>
+                                            <td>${this.RequestTypeName}</td>
+                                        </tr>`;
+            });
+
+            divContent += `</tbody></table>`;
+            $("#divDetails").html(divContent);
+        }
+        viewDailyPassRequest = function (requestId) {
+            $("#detailPopup").modal('hide');
+            window.location.href = '/view-daily-pass-request/' + requestId;
+        }
+
+        //#endregion
+
+        //#region Checkin summary
+
+
+        getCheckinDetail = function (type) {
+            $("#CheckinStatus").val(type);
+            PostFormWithoutEvent('/@ViewData["PageURL"]?handler=getCheckinDetails', '#formBasic', "loadCheckinDetail");
+        };
+
+
+        loadCheckinDetail = function (data) {
+
+            $("#detailPopup").modal('show');
+            var divContent = `<table id="gridMeterial" class="table table-bordered table-head-bg-info table-bordered-bd-info" role="grid" aria-describedby="add-row_info">
+                                    <thead>`;
+            divContent += `<tr>
+                                                        <th>Type</th>
+                                                        <th>Request No</th>
+                                                        <th>Date</th>
+                                                        <th>Requester</th>
+                                                        <th>Company</th>
+                                                        <th>Branch</th>
+                                                        <th>Sub Branch</th>
+                                                        <th>Location</th>
+                                                        <th>Status</th>
+                                                        <th>Request Type</th>
+                                                       </tr>
+                                                    </thead>
+                                                <tbody>`;
+
+            $.each(data, function () {
+                divContent += `<tr onclick="viewCheckinDetail(${this.RequestID},${this.Type})">
+                                                         <td>${this.TypeName}</td>
+                                                <td>${this.RequestNo}</td>
+                                                <td>${this.Date}</td>
+                                                <td>${this.EmployeeName}</td>
+                                                <td>${this.CompanyName}</td>
+                                                <td>${this.BranchName}</td>
+                                                <td>${this.SubBranchName}</td>
+                                                <td>${this.LocationName}</td>
+                                                <td>${this.Status}</td>
+                                                <td>${this.RequestTypeName}</td>
+                                            </tr>`;
+            });
+
+            divContent += `</tbody></table>`;
+            $("#divDetails").html(divContent);
+        }
+        viewCheckinDetail = function (requestId,type) {
+            $("#detailPopup").modal('hide');
+            if(type==1)
+                window.location.href = '/view-request/' + requestId;
+            else
+                window.location.href = '/view-daily-pass-request/' + requestId;
+        }
+
+        //#endregion
+
+    });
+
+</script>

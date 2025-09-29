@@ -1,0 +1,281 @@
+﻿<!-- Sidebar -->
+<div class="sidebar">
+
+    <div class="sidebar-background"></div>
+    <div class="sidebar-wrapper scrollbar-inner">
+        <div class="sidebar-content">
+            <div class="user">
+                <div class="avatar-sm float-left mr-2">
+                    <img src="@User.Claims.FirstOrDefault(c => c.Type == "ProfileURL").Value" class="avatar-img rounded-circle" alt="" onerror="this.onerror=null;this.src='/default/img/profile.png';">
+                </div>
+                <div class="info">
+                    <a data-toggle="collapse" href="#collapseExample" aria-expanded="true">
+                        <span>
+                            @User.Identity.Name
+                            <span class="user-level">@User.Claims.FirstOrDefault(c => c.Type == "UserTypeName").Value</span>
+                            <span class="caret"></span>
+                        </span>
+                    </a>
+                    <div class="clearfix"></div>
+
+                    <div class="collapse in" id="collapseExample">
+                        <ul class="nav">
+                            <li><a href="profile"><span class="link-collapse">My Profile</span></a></li>
+                            <li><a href="change-password"><span class="link-collapse">Change Password</span></a></li>
+                            <li><a href="logout"><span class="link-collapse">Logout</span></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <ul class="nav" id="myTab">
+                <li class="nav-item">
+                    <a href="home">
+                        <i class="fas fa-home"></i>
+                        <p>Dashboard</p>
+                    </a>
+                </li>
+
+                @if (User.IsInRole("Super-Admin") || User.IsInRole("Administrator") || User.IsInRole("Approver") || User.IsInRole("Disposal"))
+                {
+                    <li class="nav-item">
+                        <a data-toggle="collapse" href="#base">
+                            <i class="fa fa-user"></i>
+                            <p>Account</p>
+                            <span class="caret"></span>
+                        </a>
+                        <div class="collapse" id="base">
+                            <ul class="nav nav-collapse">
+                                @if (User.IsInRole("Super-Admin") || User.IsInRole("Administrator"))
+                                {
+                                    <li><a href="users"><span class="sub-item">Users</span></a></li>
+                                }
+                                <li><a href="employees"><span class="sub-item">Employees</span></a></li>
+                                <li><a href="requesters"><span class="sub-item">Requesters</span></a></li>
+                                <li><a href="new-requesters"><span class="sub-item">New Requesters</span></a></li>
+                            </ul>
+                        </div>
+                    </li>
+                }
+
+                @if (!User.IsInRole("Meterial"))
+                {
+
+                    <li class="nav-item">
+                        <a data-toggle="collapse" href="#request">
+                            <i class="fas fa-shipping-fast"></i>
+                            <p>Request</p>
+                            <span class="caret"></span>
+                        </a>
+                        <div class="collapse" id="request">
+                            <ul class="nav nav-collapse">
+
+                                @if (User.IsInRole("Employee"))
+                                {
+                                    <li><a href="new-visit-requests"><span class="sub-item">New Requests</span></a></li>
+                                }
+                                @if (User.IsInRole("Visitor"))
+                                {
+                                    <li><a href="visit-request"><span class="sub-item">New Visit Request</span></a></li>
+                                    <li><a href="visit-requests"><span class="sub-item">Visit Requests</span></a></li>
+                                }
+                                @if (User.IsInRole("Approver") || User.IsInRole("Disposal"))
+                                {
+                                    <li><a href="new-requests"><span class="sub-item">New Requests</span></a></li>
+                                }
+                                @if (User.IsInRole("Security-Duty-Manager") || User.IsInRole("Security-Control-Room"))
+                                {
+                                    <li><a href="new-forwards"><span class="sub-item">New Forwards</span></a></li>
+                                }
+                                @if (User.IsInRole("Monitor"))
+                                {
+                                    <li><a href="monitoring"><span class="sub-item">Monitor</span></a></li>
+                                }
+                                @if (User.IsInRole("Super-Admin") || User.IsInRole("Administrator") || User.IsInRole("Approver") || User.IsInRole("Disposal"))
+                                {
+                                    <li><a href="accepted-requests"><span class="sub-item">Accepted Requests</span></a></li>
+                                    <li><a href="pending-requests"><span class="sub-item">Pending Requests</span></a></li>
+                                    <li><a href="rejected-requests"><span class="sub-item">Rejected Requests</span></a></li>
+                                    <li><a href="completed-requests"><span class="sub-item">Completed Requests</span></a></li>
+                                }
+                            </ul>
+                        </div>
+                    </li>
+                }
+
+
+                @if (User.IsInRole("Approver") || User.IsInRole("Disposal"))
+                {
+
+                    <li class="nav-item">
+                        <a data-toggle="collapse" href="#daily-request">
+                            <i class="fas fa-shipping-fast"></i>
+                            <p>Scheduled Pass Request</p>
+                            <span class="caret"></span>
+                        </a>
+                        <div class="collapse" id="daily-request">
+                            <ul class="nav nav-collapse">
+
+                                <li><a href="new-daily-pass-requests"><span class="sub-item">New Requests</span></a></li>
+                                <li><a href="accepted-daily-pass-requests"><span class="sub-item">Accepted Requests</span></a></li>
+                                <li><a href="pending-daily-pass-requests"><span class="sub-item">Pending Requests</span></a></li>
+                                <li><a href="rejected-daily-pass-request"><span class="sub-item">Rejected Requests</span></a></li>
+                            </ul>
+                        </div>
+                    </li>
+                }
+
+                @if (User.IsInRole("Meterial"))
+                {
+                    <li class="nav-item">
+                        <a data-toggle="collapse" href="#entryrequest">
+                            <i class="fas fa-shipping-fast"></i>
+                            <p>Material Entry</p>
+                            <span class="caret"></span>
+                        </a>
+                        <div class="collapse" id="entryrequest">
+                            <ul class="nav nav-collapse">
+                                <li><a href="material-entry-request"><span class="sub-item">New Request</span></a></li>
+                                <li><a href="requests"><span class="sub-item">All Requests</span></a></li>
+                                <li><a href="pending-entry-requests"><span class="sub-item">Pending Requests</span></a></li>
+                                <li><a href="accepted-entry-requests"><span class="sub-item">Accepted Requests</span></a></li>
+                                <li><a href="rejected-entry-requests"><span class="sub-item">Rejected Requests</span></a></li>
+                                <li><a href="completed-entry-requests"><span class="sub-item">Completed Requests</span></a></li>
+                            </ul>
+                        </div>
+                    </li>
+
+                    <li class="nav-item">
+                        <a data-toggle="collapse" href="#exitrequest">
+                            <i class="fas fa-shipping-fast"></i>
+                            <p>Material Exit</p>
+                            <span class="caret"></span>
+                        </a>
+                        <div class="collapse" id="exitrequest">
+                            <ul class="nav nav-collapse">
+                                <li><a href="material-exit-request"><span class="sub-item">New Request</span></a></li>
+                                <li><a href="exit-requests"><span class="sub-item">All Requests</span></a></li>
+                                <li><a href="pending-exit-requests"><span class="sub-item">Pending Requests</span></a></li>
+                                <li><a href="accepted-exit-requests"><span class="sub-item">Accepted Requests</span></a></li>
+                                <li><a href="rejected-exit-requests"><span class="sub-item">Rejected Requests</span></a></li>
+                                <li><a href="completed-exit-requests"><span class="sub-item">Completed Requests</span></a></li>
+                            </ul>
+                        </div>
+                    </li>
+
+                    @*<li class="nav-item">
+                <a data-toggle="collapse" href="#projectAsset">
+                <i class="fas fa-shipping-fast"></i>
+                <p>Project Asset</p>
+                <span class="caret"></span>
+                </a>
+                <div class="collapse" id="projectAsset">
+                <ul class="nav nav-collapse">
+                <li><a href="project-asset-request"><span class="sub-item">New Request</span></a></li>
+                <li><a href="project-asset-requests"><span class="sub-item">All Request</span></a></li>
+                <li><a href="accepted-project-asset-requests"><span class="sub-item">Accepted Request</span></a></li>
+                <li><a href="pending-project-asset-requests"><span class="sub-item">Pending Request</span></a></li>
+                <li><a href="rejected-project-asset-requests"><span class="sub-item">Rejected Request</span></a></li>
+                </ul>
+                </div>
+                </li>*@
+
+                    <li class="nav-item">
+                        <a data-toggle="collapse" href="#dailyPassrequest">
+                            <i class="fas fa-shipping-fast"></i>
+                            <p>Scheduled Pass Request</p>
+                            <span class="caret"></span>
+                        </a>
+                        <div class="collapse" id="dailyPassrequest">
+                            <ul class="nav nav-collapse">
+                                <li><a href="daily-pass-request"><span class="sub-item">New Request</span></a></li>
+                                <li><a href="daily-pass-requests"><span class="sub-item">All Requests</span></a></li>
+                                <li><a href="pending-daily-pass-requests"><span class="sub-item">Pending Requests</span></a></li>
+                                <li><a href="accepted-daily-pass-requests"><span class="sub-item">Accepted Requests</span></a></li>
+                                <li><a href="rejected-daily-pass-requests"><span class="sub-item">Rejected Requests</span></a></li>
+                            </ul>
+                        </div>
+                    </li>
+                }
+
+                @if (User.IsInRole("Super-Admin") || User.IsInRole("Administrator") || User.IsInRole("Approver") || User.IsInRole("Disposal") || User.IsInRole("Company") || User.IsInRole("Individual"))
+                {
+                    <li class="nav-item">
+                        <a data-toggle="collapse" href="#settings">
+                            <i class="fa fa-cogs"></i>
+                            <p>Master</p>
+                            <span class="caret"></span>
+                        </a>
+                        <div class="collapse" id="settings">
+                            <ul class="nav nav-collapse">
+                                @if (User.IsInRole("Super-Admin") || User.IsInRole("Administrator") || User.IsInRole("Approver") || User.IsInRole("Disposal"))
+                                {
+                                    <li><a href="slot-groups"><span class="sub-item">Slot Groups</span></a></li>
+                                    <li><a href="slot-patterns"><span class="sub-item">Slot Patterns</span></a></li>
+                                    <li><a href="apply-slot-pattern"><span class="sub-item">Apply Slot Pattern</span></a></li>
+                                    <li><a href="slots"><span class="sub-item">Slots</span></a></li>
+                                    <li><a href="locations"><span class="sub-item">Locations</span></a></li>
+                                    <li><a href="branch"><span class="sub-item">Companies</span></a></li>
+                                    <li><a href="sub-branch"><span class="sub-item">Sub Companies</span></a></li>
+                                    <li><a href="document-types"><span class="sub-item">Document Types</span></a></li>
+                                    <li><a href="packing-types"><span class="sub-item">Packing Types</span></a></li>
+                                    <li><a href="department"><span class="sub-item">Departments</span></a></li>
+                                    <li><a href="purpose"><span class="sub-item">Meeting Puposes</span></a></li>
+                                    <li><a href="area"><span class="sub-item">Areas</span></a></li>
+                                    <li><a href="duration"><span class="sub-item">Meeting Durations</span></a></li>
+                                    <li><a href="user-group-mail-config"><span class="sub-item">User Group Mail Config</span></a></li>
+                                }
+                                @if (User.IsInRole("Super-Admin") || User.IsInRole("Administrator"))
+                                {
+                                    <li><a href="email-config"><span class="sub-item">Email Configuration</span></a></li>
+                                }
+                                @if (User.IsInRole("Company") || User.IsInRole("Individual"))
+                                {
+                                    <li><a href="companies"><span class="sub-item">Companies</span></a></li>
+                                    <li><a href="requesters-drivers"><span class="sub-item">Requester/Driver</span></a></li>
+                                    <li><a href="vehicles"><span class="sub-item">Vehicles</span></a></li>
+                                }
+                            </ul>
+                        </div>
+                    </li>
+                }
+
+                @if (User.IsInRole("Super-Admin") || User.IsInRole("Administrator") || User.IsInRole("Approver") || User.IsInRole("Disposal"))
+                {
+                    <li class="nav-item">
+                        <a data-toggle="collapse" href="#reports">
+                            <i class="fa fa-file-excel"></i>
+                            <p>Reports</p>
+                            <span class="caret"></span>
+                        </a>
+                        <div class="collapse" id="reports">
+                            <ul class="nav nav-collapse">
+                                <li><a href="report/schedule-list"><span class="sub-item">Schedule List</span></a></li>
+                                <li><a href="report/request-list"><span class="sub-item">Request List</span></a></li>
+                            </ul>
+                        </div>
+                    </li>
+                }
+
+
+                @if (User.IsInRole("Super-Admin") || User.IsInRole("Administrator") || User.IsInRole("Approver") || User.IsInRole("Disposal"))
+                {
+                    <li class="nav-item">
+                        <a data-toggle="collapse" href="#item">
+                            <i class="fa fa-cubes"></i>
+                            <p>Item</p>
+                            <span class="caret"></span>
+                        </a>
+                        <div class="collapse" id="item">
+                            <ul class="nav nav-collapse">
+                                <li><a href="import-items"><span class="sub-item">Item Master</span></a></li>
+                                <li><a href="po-owners"><span class="sub-item">PO Owners</span></a></li>
+                            </ul>
+                        </div>
+                    </li>
+                }
+
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- End Sidebar -->

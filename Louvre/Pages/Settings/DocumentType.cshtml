@@ -1,0 +1,126 @@
+﻿@page "/document-types"
+@model Progbiz.DocumentTypeModel
+@{
+    ViewData["Title"] = "Document Types";
+    ViewData["ParentMenu"] = "Master";
+    ViewData["PageURL"] = "document-types";
+    ViewData["MasterPageURL"] = "document-types";
+}
+
+<div class="main-panel">
+    <div class="content">
+        <div class="page-inner">
+            <partial name="_BreadCrumb" />
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card card-with-nav">
+                        <div class="card-header">
+                            <div class="row row-nav-line">
+                                <ul class="nav nav-tabs nav-line nav-color-secondary" role="tablist">
+                                    <li class="nav-item"> <a class="nav-link" role="tab" aria-selected="true">@ViewData["Title"]</a> </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <form method="post" id="formBasic" enctype="multipart/form-data">
+
+                                <div class='mt-3 mb-3 overflow-table'>
+                                    <table id="gridFields" class="table table-bordered table-head-bg-info table-bordered-bd-info mt-4" role="grid" aria-describedby="add-row_info">
+                                        <thead>
+											<tr>
+												<th>Document Type Name</th>
+												<th>Category</th>
+												@*<th>Is Required</th>*@
+												<th style="width:10px"></th>
+											</tr>
+                                        </thead>
+                                        <tbody>
+                                            @for (int i = 0; i < Model.Data.Count(); i++)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        <input type="hidden" asp-for="Data[i].DocumentTypeID" />
+                                                        <input class="form-control" type="text" asp-for="Data[i].DocumentTypeName">
+                                                    </td>
+                                                    <td>
+                                                        <select class="form-control" asp-for="Data[i].DocumentTypeCategoryID" asp-items="ViewBag.Categories"></select>
+                                                    </td>
+													@*<td>
+														<center><input class="form-check-input" type="checkbox" asp-for="Data[i].IsRequired"></center>
+													</td>*@
+                                                    <td style="width:10px">
+                                                        <a onclick="removeTableRow(this,$(this).closest('table').attr('id'))"><span class="fa fa-trash"></span></a>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                        <tfoot>
+											<tr>
+												<td>
+													<input class="form-control" type="text" id="txtName">
+												</td>
+												<td>
+													<select class="form-control" id="cmbCategory" asp-items="ViewBag.Categories">
+														<option></option>
+													</select>
+												</td>
+												@*<td>
+													<center><input class="form-check-input" type="checkbox" id="cbRequired"></center>
+												</td>*@
+												<td style="width:10px">
+													<a class="" onclick="addItem($(this).closest('table').attr('id'));"><i class="fa fa-plus-circle"></i></a>
+												</td>
+
+											</tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                                <div class="text-right mt-3 mb-3">
+                                    <partial name="_SaveButton" />
+                                </div>
+                                <partial name="_ErrorPartial" />
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    var gridFields = [
+        {
+            FieldType: "text",
+            FieldName: "DocumentTypeName",
+            ControlName: "txtName",
+            Required: "required"
+        },
+        {
+            FieldType: "select",
+            FieldName: "DocumentTypeCategoryID",
+            ControlName: "cmbCategory",
+            Required: "required"
+        },
+		//{
+		//	FieldType: "radio",
+		//	FieldName: "IsRequired",
+		//	ControlName: "cbRequired",
+		//},
+        {
+            FieldType: "hidden",
+            FieldName: "DocumentTypeID",
+        },
+    ];
+
+    $(function () {
+
+        addItem = function (tableId) {
+            addTableRow(tableId, 'Data', gridFields);
+            $("#txtName").focus();
+        };
+    });
+
+</script>

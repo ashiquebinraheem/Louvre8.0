@@ -1,0 +1,12 @@
+﻿@page "/new-forwards"
+@model Louvre.Pages.NewForwardsModel
+@{
+    ViewData["Title"] = "New Forwards";
+    ViewData["PageURL"] = "new-forwards";
+    ViewData["ParentMenu"] = "Request";
+    ViewData["ItemPageURL"] = "approve-forward";
+    ViewData["ItemIDFieldName"] = "RequestID";
+    ViewData["HideNewButton"] = true;
+}
+
+<partial name="_PaginationGrid"/>

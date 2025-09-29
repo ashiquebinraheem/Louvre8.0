@@ -1,0 +1,1214 @@
+﻿
+@page "/view-request/{id}"
+@model Louvre.Pages.ViewRequestModel
+@{
+    ViewData["Title"] = "View Request";
+    ViewData["ParentMenu"] = "Request";
+}
+
+<div class="main-panel">
+    <div class="content">
+        <div class="page-inner">
+            <partial name="_BreadCrumb" />
+            <form method="post" id="formBasic" enctype="multipart/form-data">
+                <div class="row">
+                    <div class="col-md-12">
+                        <input type="hidden" asp-for="RequestApproval.RequestID" />
+                        <input type="hidden" asp-for="Data.BranchID" />
+                        <input type="hidden" asp-for="Data.SlotID" />
+                        <input type="hidden" asp-for="Data.RequestedByID" />
+
+                        <!--Request Details-->
+                        <div class="card card-with-nav">
+                            <div class="card-header">
+                                <div class="row row-nav-line">
+                                    <ul class="nav nav-tabs nav-line nav-color-secondary" role="tablist">
+                                        <li class="nav-item float-left"> <a class="nav-link" role="tab" aria-selected="true">Basic Information</a> </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="row ">
+
+                                    @if (Model.Data!=null && Model.Data.RequestNo != 0)
+									{
+										<div class="col-md-12 mb-3">Request No: @Model.Data.RequestNo</div>
+									}
+
+                                    <div class="col-md-6">
+                                        <div class="form-group form-group-default">
+                                            <label>Company</label>
+                                            <input type="text" class="form-control" asp-for="Data.BranchName" readonly />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group form-group-default">
+                                            <label>Sub Company</label>
+                                            <input type="text" class="form-control" asp-for="Data.SubBranchName" readonly />
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group form-group-default">
+                                            <label>Request Mode</label>
+                                            <input type="text" class="form-control" asp-for="Data.ModeName" readonly />
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-md-6">
+                                        <div class="form-group form-group-default">
+                                            <label style="color:@Model.Data.Color !important">Current Status</label>
+                                            <input type="text" class="form-control" asp-for="Data.Status" style="color:@Model.Data.Color" readonly />
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-md-6">
+                                        <div class="form-group form-group-default">
+                                            <label>Location</label>
+                                            <input type="text" class="form-control" asp-for="Data.RequestedLocationName" readonly />
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group form-group-default">
+                                            <label>Date</label>
+                                            <input type="date" class="form-control" asp-for="Data.RequestedDate" readonly />
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group form-group-default">
+                                            <label>Requested Slot</label>
+                                            <input type="text" class="form-control" asp-for="Data.RequestedSlot" readonly />
+                                        </div>
+                                    </div>
+
+                                    @if (Model.Data.IsIn == true)
+
+                                    {
+                                        <div class="col-md-6">
+                                            <div class="form-group form-group-default">
+                                                <label>Host Email address</label>
+                                                <input type="text" asp-for="Data.HostEmail" class="form-control" readonly />
+                                            </div>
+                                        </div>
+                                    }
+
+                                    @if(Model.Data.IsIn == false)
+                                    {
+                                        <div class="col-md-6">
+                                            <div class="form-group form-group-default">
+                                                <label>Storage Location</label>
+                                                <input type="text" class="form-control" asp-for="Data.LocationName" readonly />
+                                            </div>
+                                        </div>
+                                    }
+
+                                    @if (!string.IsNullOrEmpty(Model.Data.MeterialTypeName))
+                                    {
+                                        <div class="col-md-6">
+                                            <div class="form-group form-group-default">
+                                                <label>Material Type</label>
+                                                <input type="text" class="form-control" asp-for="Data.MeterialTypeName" readonly />
+                                            </div>
+                                        </div>
+
+                                        @if (@Model.Data.MeterialTypeID == 1)
+                                        {
+                                            <div class='col-md-6'>
+                                                <div class="form-check">
+                                                    <label class="form-check-label">
+                                                        <input class="form-check-input" type="checkbox" asp-for="Data.ContainsExplosive">
+                                                        <span class="form-check-sign">Contains hazardous material</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        }
+
+                                        <div class='col-md-6' id="divCarry">
+                                            <div class="form-check">
+                                                <label class="form-check-label">
+                                                    <input class="form-check-input" type="checkbox" asp-for="Data.ContainsCarryItem" id="cbContainsCarryItem">
+                                                    <span class="form-check-sign">Hand Carry Item</span>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                    }
+                                    @if (!Model.Data.IsIn)
+                                    {
+                                        <div class='col-md-6'>
+                                            <div class="form-check">
+                                                <label class="form-check-label">
+                                                    <input class="form-check-input" type="checkbox" asp-for="Data.IsDisposalRequired">
+                                                    <span class="form-check-sign">Disposal Required</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    }
+
+                                    <div class="col-md-12">
+                                        <div class="form-group form-group-default">
+                                            <label>Remarks if any</label>
+                                            <textarea asp-for="Data.Narration" class="form-control">
+                                        </textarea>
+                                        </div>
+                                    </div>
+                                    @if (Model.Data.StatusID == (int)Louvre.Shared.Models.RequestStatus.Accepted)
+                                    {
+                                        <div class="col-3"><img alt='Embedded Image' width='200' src="@Model.Image">
+                                            <br/>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <label>@Model.QRCode</label>
+                                        
+                                        </div>
+
+                                      
+                                    }
+                                </div>
+
+                                <div class="row">
+
+                                    @for (int i = 0; i < Model.RequestDocuments.Count; i++)
+                                    {
+                                        <div class="col-md-4">
+                                            <div class="card card-profile card-secondary">
+                                                <div class="card-header" id="RequestDocuments_Img_@i" onclick="showImageInPopup(this)" data-toggle="modal" data-target="#photViewer" style="background-image: url('@Model.RequestDocuments[i].FileName')">
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="user-profile text-center">
+                                                        <div class="job">@Model.RequestDocuments[i].DocumentTypeName</div>
+                                                        <div class="job">@Model.RequestDocuments[i].DocumentNumber</div>
+
+                                                        @if (@Model.RequestDocuments[i].ExpiresOn != null)
+                                                        {
+                                                            if (@Model.RequestDocuments[i].ExpiresOn.Value < DateTime.UtcNow)
+                                                            {
+                                                                <div class="desc" style="color:red;">
+                                                                    @Model.RequestDocuments[i].ExpiresOn.Value.ToShortDateString()
+                                                                </div>
+                                                            }
+                                                            else
+                                                            {
+                                                                <div class="desc">
+                                                                    @Model.RequestDocuments[i].ExpiresOn.Value.ToShortDateString()
+                                                                </div>
+                                                            }
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @if (!string.IsNullOrEmpty(Model.RequestDocuments[i].FileName2))
+                                        {
+                                            <div class="col-md-4">
+                                                <div class="card card-profile card-secondary">
+                                                    <div class="card-header" id="RequestDocuments_Img2_@i" onclick="showImageInPopup(this)" data-toggle="modal" data-target="#photViewer" style="background-image: url('@Model.RequestDocuments[i].FileName2')">
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div class="user-profile text-center">
+                                                            <div class="job">@Model.RequestDocuments[i].DocumentTypeName</div>
+                                                            <div class="job">@Model.RequestDocuments[i].DocumentNumber</div>
+
+                                                            @if (@Model.RequestDocuments[i].ExpiresOn != null)
+                                                            {
+                                                                if (@Model.RequestDocuments[i].ExpiresOn.Value < DateTime.UtcNow)
+                                                                {
+                                                                    <div class="desc" style="color:red;">
+                                                                        @Model.RequestDocuments[i].ExpiresOn.Value.ToShortDateString()
+                                                                    </div>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <div class="desc">
+                                                                        @Model.RequestDocuments[i].ExpiresOn.Value.ToShortDateString()
+                                                                    </div>
+                                                                }
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <!--Request Details-->
+                        @if (Model.RequestApproval.StatusID == 4)
+                        {
+
+                            <div class="card card-with-nav">
+                                <div class="card-header">
+                                    <div class="row row-nav-line">
+                                        <ul class="nav nav-tabs nav-line nav-color-secondary" role="tablist">
+                                            <li class="nav-item"> <a class="nav-link" role="tab" aria-selected="true">Approval Details</a> </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+
+                                    <div class="row">
+
+                                        <div class="col-md-6">
+                                            <div class="form-group form-group-default">
+                                                <label>Storage Space</label>
+                                                <select class="form-control" asp-for="RequestApproval.StorageLocationID" asp-items="ViewBag.StorageLocations">
+                                                    <option>--Not Idetified--</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group form-group-default">
+                                                <label>Approved Location</label>
+                                                <select class="form-control" asp-for="RequestApproval.LocationID" required asp-items="ViewBag.Locations">
+                                                    <option></option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group form-group-default">
+                                                <label>Date</label>
+                                                <input type="date" asp-for="RequestApproval.Date" id="txtDate" class="form-control" required />
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group form-group-default">
+                                                <label>Choose Slot</label>
+                                                <select class="form-control" asp-for="RequestApproval.SlotID" required id="cmbSlot" asp-items="ViewBag.Slots">
+                                                    <option></option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        else if (Model.RequestApproval.StatusID == 3)
+                        {
+                            <div class="card card-with-nav">
+                                <div class="card-header">
+                                    <div class="row row-nav-line">
+                                        <ul class="nav nav-tabs nav-line nav-color-secondary" role="tablist">
+                                            <li class="nav-item"> <a class="nav-link" role="tab" aria-selected="true">Rejection Details</a> </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group form-group-default">
+                                                <label>Remark</label>
+                                                <textarea class="form-control" asp-for="RequestApproval.Remarks">
+                                                    </textarea>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                        <!--Requester Details-->
+                        <div class="card card-with-nav">
+                            <div class="card-header">
+                                <div class="row row-nav-line">
+                                    <ul class="nav nav-tabs nav-line nav-color-secondary" role="tablist">
+                                        <li class="nav-item"> <a class="nav-link" role="tab" aria-selected="true">Requester Information</a> </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card-body">
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group form-group-default">
+                                            <label>Requester</label>
+                                            <input type="text" class="form-control" asp-for="Data.EmployeeName" readonly />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group form-group-default">
+                                            <label>Designation</label>
+                                            <input type="text" class="form-control" asp-for="Data.DesignationName" readonly />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group form-group-default">
+                                            <label>Company</label>
+                                            <input type="text" class="form-control" asp-for="Data.CompanyName" readonly />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group form-group-default">
+                                            <label>Email address</label>
+                                            <input type="text" class="form-control" asp-for="Data.Email" readonly />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group form-group-default">
+                                            <label>Mobile No</label>
+                                            <input type="text" class="form-control" asp-for="Data.ContactNumber" readonly />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+
+                                    @for (int i = 0; i < Model.RequesterDocuments.Count; i++)
+                                    {
+                                        <div class="col-md-4">
+                                            <div class="card card-profile card-secondary">
+                                                @{
+                                                    var filePath = System.IO.Path.Combine("wwwroot", "gallery", "company_documents", Model.RequesterDocuments[i].FileName);
+                                                }
+                                                @if (System.IO.File.Exists(filePath))
+                                                {
+                                                    <div class="card-header" id="RequesterDocuments_Img_@i" onclick="showImageInPopup(this)" data-toggle="modal" data-target="#photViewer" style="background-image: url('@Model.RequesterDocuments[i].FileName'), url('/default/img/pdf.png')">
+                                                    </div>
+                                                }
+                                                <div class="card-body">
+                                                    <div class="user-profile text-center">
+                                                        <div class="job">@Model.RequesterDocuments[i].DocumentTypeName</div>
+                                                        <div class="job">@Model.RequesterDocuments[i].DocumentNumber</div>
+
+                                                        @if (@Model.RequesterDocuments[i].ExpiresOn != null)
+                                                        {
+                                                            if (@Model.RequesterDocuments[i].ExpiresOn.Value < DateTime.UtcNow)
+                                                            {
+                                                                <div class="desc" style="color:red;">
+                                                                    @Model.RequesterDocuments[i].ExpiresOn.Value.ToShortDateString()
+                                                                </div>
+                                                            }
+                                                            else
+                                                            {
+                                                                <div class="desc">
+                                                                    @Model.RequesterDocuments[i].ExpiresOn.Value.ToShortDateString()
+                                                                </div>
+                                                            }
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        if (!string.IsNullOrEmpty(Model.RequesterDocuments[i].FileName2))
+                                        {
+                                            <div class="col-md-4">
+                                                <div class="card card-profile card-secondary">
+                                                    @{
+                                                        var filePath1 = System.IO.Path.Combine("wwwroot", "gallery", "company_documents", Model.RequesterDocuments[i].FileName2);
+                                                    }
+                                                    @if (System.IO.File.Exists(filePath1))
+                                                    {
+                                                        <div class="card-header" id="RequesterDocuments_Img2_@i" onclick="showImageInPopup(this)" data-toggle="modal" data-target="#photViewer" style="background-image: url('@Model.RequesterDocuments[i].FileName2'), url('/default/img/pdf.png')">
+                                                        </div>
+                                                    }
+                                                   
+                                                    <div class="card-body">
+                                                        <div class="user-profile text-center">
+                                                            <div class="job">@Model.RequesterDocuments[i].DocumentTypeName</div>
+                                                            <div class="job">@Model.RequesterDocuments[i].DocumentNumber</div>
+
+                                                            @if (@Model.RequesterDocuments[i].ExpiresOn != null)
+                                                            {
+                                                                if (@Model.RequesterDocuments[i].ExpiresOn.Value < DateTime.UtcNow)
+                                                                {
+                                                                    <div class="desc" style="color:red;">
+                                                                        @Model.RequesterDocuments[i].ExpiresOn.Value.ToShortDateString()
+                                                                    </div>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <div class="desc">
+                                                                        @Model.RequesterDocuments[i].ExpiresOn.Value.ToShortDateString()
+                                                                    </div>
+                                                                }
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <!--Requester Details-->
+                        <!--Driver Details-->
+                        <div class="card card-with-nav">
+                            <div class="card-header">
+                                <div class="row row-nav-line">
+                                    <ul class="nav nav-tabs nav-line nav-color-secondary" role="tablist">
+                                        <li class="nav-item"> <a class="nav-link" role="tab" aria-selected="true">Driver Information</a> </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card-body">
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group form-group-default">
+                                            <label>Driver Name</label>
+                                            <input type="text" class="form-control" asp-for="DriverData.EmployeeName" readonly />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group form-group-default">
+                                            <label>Designation</label>
+                                            <input type="text" class="form-control" asp-for="DriverData.DesignationName" readonly />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group form-group-default">
+                                            <label>Company</label>
+                                            <input type="text" class="form-control" asp-for="DriverData.CompanyName" readonly />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group form-group-default">
+                                            <label>Email address</label>
+                                            <input type="text" class="form-control" asp-for="DriverData.Email" readonly />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group form-group-default">
+                                            <label>Mobile No</label>
+                                            <input type="text" class="form-control" asp-for="DriverData.ContactNumber" readonly />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+
+                                    @for (int i = 0; i < Model.DriverDocuments.Count; i++)
+                                    {
+
+                                        <div class="col-md-4">
+                                            <div class="card card-profile card-secondary">
+                                                @{
+                                                    var filePath = System.IO.Path.Combine("wwwroot", "gallery", "company_documents", Model.DriverDocuments[i].FileName);
+                                                }
+                                                @if (System.IO.File.Exists(filePath))
+                                                {
+                                                    <div class="card-header" id="DriverDocuments_Img_@i" onclick="showImageInPopup(this)" data-toggle="modal" data-target="#photViewer" style="background-image: url('@Model.DriverDocuments[i].FileName'), url('/default/img/pdf.png')">
+                                                    </div>
+                                                }
+                                               
+                                                <div class="card-body">
+                                                    <div class="user-profile text-center">
+                                                        <div class="job">@Model.DriverDocuments[i].DocumentTypeName</div>
+                                                        <div class="job">@Model.DriverDocuments[i].DocumentNumber</div>
+
+                                                        @if (@Model.DriverDocuments[i].ExpiresOn != null)
+                                                        {
+                                                            if (@Model.DriverDocuments[i].ExpiresOn.Value < DateTime.UtcNow)
+                                                            {
+                                                                <div class="desc" style="color:red;">
+                                                                    @Model.DriverDocuments[i].ExpiresOn.Value.ToShortDateString()
+                                                                </div>
+                                                            }
+                                                            else
+                                                            {
+                                                                <div class="desc">
+                                                                    @Model.DriverDocuments[i].ExpiresOn.Value.ToShortDateString()
+                                                                </div>
+                                                            }
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        if (!string.IsNullOrEmpty(Model.DriverDocuments[i].FileName2))
+                                        {
+                                            <div class="col-md-4">
+                                                <div class="card card-profile card-secondary">
+                                                    @{
+                                                        var DfilePath = System.IO.Path.Combine("wwwroot", "gallery", "company_documents", Model.DriverDocuments[i].FileName2);
+                                                    }
+                                                    @if (System.IO.File.Exists(DfilePath))
+                                                    {
+                                                        <div class="card-header" id="DriverDocuments_Img2_@i" onclick="showImageInPopup(this)" data-toggle="modal" data-target="#photViewer" style="background-image: url('@Model.DriverDocuments[i].FileName2'), url('/default/img/pdf.png')">
+                                                        </div>
+                                                    }
+                                                    <div class="card-body">
+                                                        <div class="user-profile text-center">
+                                                            <div class="job">@Model.DriverDocuments[i].DocumentTypeName</div>
+                                                            <div class="job">@Model.DriverDocuments[i].DocumentNumber</div>
+
+                                                            @if (@Model.DriverDocuments[i].ExpiresOn != null)
+                                                            {
+                                                                if (@Model.DriverDocuments[i].ExpiresOn.Value < DateTime.UtcNow)
+                                                                {
+                                                                    <div class="desc" style="color:red;">
+                                                                        @Model.DriverDocuments[i].ExpiresOn.Value.ToShortDateString()
+                                                                    </div>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <div class="desc">
+                                                                        @Model.DriverDocuments[i].ExpiresOn.Value.ToShortDateString()
+                                                                    </div>
+                                                                }
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <!--Driver Details-->
+                        <!--Vehicle Details-->
+                        <div class="card card-with-nav">
+                            <div class="card-header">
+                                <div class="row row-nav-line">
+                                    <ul class="nav nav-tabs nav-line nav-color-secondary" role="tablist">
+                                        <li class="nav-item"> <a class="nav-link" role="tab" aria-selected="true">Vehicle Information</a> </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card-body">
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group form-group-default">
+                                            <label>Register No</label>
+                                            <input type="text" class="form-control" asp-for="VehicleData.RegisterNo" readonly />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group form-group-default">
+                                            <label>Type</label>
+                                            <input type="text" class="form-control" asp-for="VehicleData.VehicleTypeName" readonly />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group form-group-default">
+                                            <label>Size</label>
+                                            <input type="text" class="form-control" asp-for="VehicleData.VehicleSize" readonly />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group form-group-default">
+                                            <label>Plate No</label>
+                                            <input type="text" class="form-control" asp-for="VehicleData.PlateNo" readonly />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    @for (int i = 0; i < Model.VehicleDocuments.Count; i++)
+                                    {
+
+                                        <div class="col-md-4">
+                                            <div class="card card-profile card-secondary">
+                                                @{
+                                                    var filePath = System.IO.Path.Combine("wwwroot", "gallery", "company_documents", Model.VehicleDocuments[i].FileName);
+                                                }
+                                                @if (System.IO.File.Exists(filePath))
+                                                {
+                                                    <div class="card-header" id="VehicleDocuments_Img_@i" onclick="showImageInPopup(this)" data-toggle="modal" data-target="#photViewer" style="background-image: url('@Model.VehicleDocuments[i].FileName'), url('/default/img/pdf.png')">
+                                                    </div>
+                                                }
+                                                
+                                                <div class="card-body">
+                                                    <div class="user-profile text-center">
+                                                        <div class="job">@Model.VehicleDocuments[i].DocumentTypeName</div>
+                                                        <div class="job">@Model.VehicleDocuments[i].DocumentNumber</div>
+
+                                                        @if (@Model.VehicleDocuments[i].ExpiresOn != null)
+                                                        {
+                                                            if (@Model.VehicleDocuments[i].ExpiresOn.Value < DateTime.UtcNow)
+                                                            {
+                                                                <div class="desc" style="color:red;">
+                                                                    @Model.VehicleDocuments[i].ExpiresOn.Value.ToShortDateString()
+                                                                </div>
+                                                            }
+                                                            else
+                                                            {
+                                                                <div class="desc">
+                                                                    @Model.VehicleDocuments[i].ExpiresOn.Value.ToShortDateString()
+                                                                </div>
+                                                            }
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        if (!string.IsNullOrEmpty(Model.VehicleDocuments[i].FileName2))
+                                        {
+                                            <div class="col-md-4">
+                                                <div class="card card-profile card-secondary">
+                                                    @{
+                                                        var VfilePath = System.IO.Path.Combine("wwwroot", "gallery", "company_documents", Model.VehicleDocuments[i].FileName2);
+                                                    }
+                                                    @if (System.IO.File.Exists(VfilePath))
+                                                    {
+                                                        <div class="card-header" id="VehicleDocuments_Img2_@i" onclick="showImageInPopup(this)" data-toggle="modal" data-target="#photViewer" style="background-image: url('@Model.VehicleDocuments[i].FileName2'), url('/default/img/pdf.png')">
+                                                        </div>
+                                                    }
+                                                    
+                                                    <div class="card-body">
+                                                        <div class="user-profile text-center">
+                                                            <div class="job">@Model.VehicleDocuments[i].DocumentTypeName</div>
+                                                            <div class="job">@Model.VehicleDocuments[i].DocumentNumber</div>
+
+                                                            @if (@Model.VehicleDocuments[i].ExpiresOn != null)
+                                                            {
+                                                                if (@Model.VehicleDocuments[i].ExpiresOn.Value < DateTime.UtcNow)
+                                                                {
+                                                                    <div class="desc" style="color:red;">
+                                                                        @Model.VehicleDocuments[i].ExpiresOn.Value.ToShortDateString()
+                                                                    </div>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <div class="desc">
+                                                                        @Model.VehicleDocuments[i].ExpiresOn.Value.ToShortDateString()
+                                                                    </div>
+                                                                }
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <!--Vehicle Details-->
+                        <!--Passenger Details-->
+                        <div class="card card-with-nav">
+                            <div class="card-header">
+                                <div class="row row-nav-line">
+                                    <ul class="nav nav-tabs nav-line nav-color-secondary" role="tablist">
+                                        <li class="nav-item"> <a class="nav-link" role="tab" aria-selected="true">Passenger Information</a> </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card-body">
+
+                                <div class="row">
+                                    <div class="col-md-12 overflow-table">
+                                        <table id="gridPassengers" class="table table-bordered table-head-bg-info table-bordered-bd-info" role="grid" aria-describedby="add-row_info">
+                                            <thead>
+                                                <tr>
+                                                    <th>Co Passenger</th>
+                                                    <th>Designation</th>
+                                                    <th>Company</th>
+                                                    <th>Mobile No</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @for (int i = 0, j = 1; i < Model.Passengers.Count(); i++, j++)
+                                                {
+                                                    <tr>
+                                                        <td>
+                                                            <input class="form-control" type="text" asp-for="Passengers[i].EmployeeName">
+                                                        </td>
+                                                        <td>
+                                                            <input class="form-control" type="text" asp-for="Passengers[i].DesignationName">
+                                                        </td>
+                                                        <td>
+                                                            <input class="form-control" type="text" asp-for="Passengers[i].CompanyName">
+                                                        </td>
+                                                        <td>
+                                                            <input class="form-control" type="text" asp-for="Passengers[i].ContactNumber">
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="row">
+
+                                    @for (int i = 0; i < Model.PassengerDocuments.Count; i++)
+                                    {
+
+                                        <div class="col-md-4">
+                                            <div class="card card-profile card-secondary">
+                                                @{
+                                                    var filePath = System.IO.Path.Combine("wwwroot", "gallery", "company_documents", Model.PassengerDocuments[i].FileName);
+                                                }
+                                                @if (System.IO.File.Exists(filePath)){
+                                                    <div class="card-header" id="PassengerDocuments_Img_@i" onclick="showImageInPopup(this)" data-toggle="modal" data-target="#photViewer" style="background-image: url('@Model.PassengerDocuments[i].FileName'), url('/default/img/pdf.png')">
+                                                    </div>
+                                                }
+                                                
+                                                <div class="card-body">
+                                                    <div class="user-profile text-center">
+                                                        <div class="job">@Model.PassengerDocuments[i].DocumentTypeName</div>
+                                                        <div class="job">@Model.PassengerDocuments[i].DocumentNumber</div>
+
+                                                        @if (@Model.PassengerDocuments[i].ExpiresOn != null)
+                                                        {
+                                                            if (@Model.PassengerDocuments[i].ExpiresOn.Value < DateTime.UtcNow)
+                                                            {
+                                                                <div class="desc" style="color:red;">
+                                                                    @Model.PassengerDocuments[i].ExpiresOn.Value.ToShortDateString()
+                                                                </div>
+                                                            }
+                                                            else
+                                                            {
+                                                                <div class="desc">
+                                                                    @Model.PassengerDocuments[i].ExpiresOn.Value.ToShortDateString()
+                                                                </div>
+                                                            }
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        if (!string.IsNullOrEmpty(Model.PassengerDocuments[i].FileName2))
+                                        {
+                                            <div class="col-md-4">
+                                                <div class="card card-profile card-secondary">
+                                                    @{
+                                                        var PfilePath = System.IO.Path.Combine("wwwroot", "gallery", "company_documents", Model.PassengerDocuments[i].FileName2);
+                                                    }
+                                                    @if (System.IO.File.Exists(PfilePath))
+                                                    {
+                                                        <div class="card-header" id="PassengerDocuments_Img2_@i" onclick="showImageInPopup(this)" data-toggle="modal" data-target="#photViewer" style="background-image: url('@Model.PassengerDocuments[i].FileName2'), url('/default/img/pdf.png')">
+                                                    </div>
+                                                    }
+                                                    
+                                                    <div class="card-body">
+                                                        <div class="user-profile text-center">
+                                                            <div class="job">@Model.PassengerDocuments[i].DocumentTypeName</div>
+                                                            <div class="job">@Model.PassengerDocuments[i].DocumentNumber</div>
+
+                                                            @if (@Model.PassengerDocuments[i].ExpiresOn != null)
+                                                            {
+                                                                if (@Model.PassengerDocuments[i].ExpiresOn.Value < DateTime.UtcNow)
+                                                                {
+                                                                    <div class="desc" style="color:red;">
+                                                                        @Model.PassengerDocuments[i].ExpiresOn.Value.ToShortDateString()
+                                                                    </div>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <div class="desc">
+                                                                        @Model.PassengerDocuments[i].ExpiresOn.Value.ToShortDateString()
+                                                                    </div>
+                                                                }
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <!--Passenger Details-->
+                        @if (Model.Data.RequestModeID != 2)
+                        {
+                            <div class="card card-with-nav">
+                                <div class="card-header">
+                                    <div class="row row-nav-line">
+                                        <ul class="nav nav-tabs nav-line nav-color-secondary" role="tablist">
+                                            <li class="nav-item"> <a class="nav-link" role="tab" aria-selected="true">Material information</a> </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+
+                                    <div class="row">
+
+                                        @if (Model.Data.IsProjectAsset)
+                                        {
+
+                                            <div class="col-md-6">
+                                                <div class="form-group form-group-default">
+                                                    <label>PO Number</label>
+                                                    <input type="text" class="form-control" asp-for="Data.PONumber" />
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <div class="form-group form-group-default">
+                                                    <label>PO Date</label>
+                                                    <input type="date" class="form-control" asp-for="Data.PODate" />
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <div class="form-group form-group-default">
+                                                    <label>Delivery Date</label>
+                                                    <input type="date" class="form-control" asp-for="Data.DeliveryDate" />
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <div class="form-group form-group-default">
+                                                    <label>PO Owner</label>
+                                                    <select class="form-control" id="cmbPOOwner" asp-for="Data.POOwnerID"  asp-items="ViewBag.POOwners">
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            @if (Model.Spares.Count > 0)
+                                            {
+                                                <div class="col-12">
+                                                    Spares
+                                                </div>
+
+                                                <div class="col-md-12 mt-2 overflow-table">
+                                                    <table id="gridSpare" class="table table-bordered table-head-bg-info table-bordered-bd-info" role="grid" aria-describedby="add-row_info">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>SN</th>
+                                                                <th>Item Code</th>
+                                                                <th>Item Name</th>
+                                                                <th>Unit</th>
+                                                                <th>Quantity</th>
+                                                                <th>Price (AED)</th>
+                                                                <th>Value (AED)</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @for (int i = 0, j = 1; i < Model.Spares.Count(); i++, j++)
+                                                            {
+                                                                <tr>
+                                                                    <td class="text-center">
+                                                                        <label>@j</label>
+                                                                    </td>
+                                                                    <td style="width:150px"> 
+                                                                        @Model.Spares[i].Code
+                                                                    </td>
+                                                                    <td style="min-width:200px">
+                                                                        @Model.Spares[i].Name
+                                                                    </td>
+                                                                    <td>
+                                                                        @Model.Spares[i].Unit
+                                                                    </td>
+                                                                    <td>
+                                                                        @Model.Spares[i].Quantity
+                                                                    </td>
+                                                                    <td>
+                                                                        @Model.Spares[i].Price
+                                                                    </td>
+                                                                    <td>
+                                                                        @Model.Spares[i].Value
+                                                                    </td>
+                                                                </tr>
+                                                            }
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            }
+
+                                            @if(Model.Consumables.Count>0)
+                                            {
+                                            <div class="col-12 mt-2">
+                                                Consumables
+                                            </div>
+
+                                            <div class="col-md-12 mt-2 overflow-table">
+                                                <table id="gridConsumable" class="table table-bordered table-head-bg-info table-bordered-bd-info" role="grid" aria-describedby="add-row_info">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>SN</th>
+                                                            <th>Item Code</th>
+                                                            <th>Item Name</th>
+                                                            <th>Unit</th>
+                                                            <th>Quantity</th>
+                                                            <th>Price (AED)</th>
+                                                            <th>Value (AED)</th>
+                                                            <th>Batch No</th>
+                                                            <th>Expiry Date</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @for (int i = 0, j = 1; i < Model.Consumables.Count(); i++, j++)
+                                                        {
+                                                            <tr>
+                                                                <td class="text-center">
+                                                                    <label>@j</label>
+                                                                </td>
+                                                                <td style="width:150px">
+                                                                    @Model.Consumables[i].Code
+                                                                </td>
+                                                                <td style="width:200px">
+                                                                     @Model.Consumables[i].Name
+                                                                </td>
+                                                                <td>
+                                                                     @Model.Consumables[i].Unit
+                                                                </td>
+                                                                <td>
+                                                                    @Model.Consumables[i].Quantity
+                                                                </td>
+                                                                <td>
+                                                                     @Model.Consumables[i].Price
+                                                                </td>
+                                                                <td>
+                                                                     @Model.Consumables[i].Value
+                                                                </td>
+                                                                <td>
+                                                                     @Model.Consumables[i].BatchNo
+                                                                </td>
+                                                                <td>
+                                                                    @Model.Consumables[i].ExpiryDate
+                                                                </td>
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            }
+
+                                            @if (Model.Assets.Count > 0)
+                                            {
+                                                <div class="col-12 mt-2">
+                                                    Assets
+                                                </div>
+
+                                                <div class="col-md-12 mt-2 overflow-table">
+                                                    <table id="gridAsset" class="table table-bordered table-head-bg-info table-bordered-bd-info" role="grid" aria-describedby="add-row_info">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>SN</th>
+                                                                <th width="100px">Item Code</th>
+                                                                <th width="200px">Item Name</th>
+                                                                <th width="200px">OEM</th>
+                                                                <th width="200px">Make/Brand</th>
+                                                                <th width="200px">Model</th>
+                                                                <th width="200px">Serial Number</th>
+                                                                <th width="200px">Warrenty End date</th>
+                                                                <th width="200px">Manufacturing Year</th>
+                                                                <th width="200px">Expected Life(Year)</th>
+                                                                <th width="100px">Value (AED)</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @for (int i = 0, j = 1; i < Model.Assets.Count(); i++, j++)
+                                                            {
+                                                                <tr>
+                                                                    <td class="text-center">
+                                                                        <label>@j</label>
+                                                                    </td>
+                                                                    <td style="width:150px">
+                                                                        @Model.Assets[i].Code
+                                                                    </td>
+                                                                    <td style="width:200px">
+                                                                        @Model.Assets[i].Name
+                                                                    </td>
+                                                                    <td>
+                                                                        @Model.Assets[i].OEM
+                                                                    </td>
+                                                                    <td>
+                                                                        @Model.Assets[i].Brand
+                                                                    </td>
+                                                                    <td>
+                                                                        @Model.Assets[i].Model
+                                                                    </td>
+                                                                    <td>
+                                                                        @Model.Assets[i].SerialNo
+                                                                    </td>
+                                                                    <td>
+                                                                        @if(@Model.Assets[i].WarrantyDate.HasValue)
+                                                                        {
+                                                                            @Model.Assets[i].WarrantyDate.Value.ToString("dd/MM/yyyy")
+                                                                        }
+                                                                    </td>
+                                                                    <td>
+                                                                        @Model.Assets[i].ManufactureYear
+                                                                    </td>
+                                                                    <td>
+                                                                        @Model.Assets[i].ExpectedLifeYear
+                                                                    </td>
+                                                                    <td>
+                                                                        @Model.Assets[i].Value
+                                                                    </td>
+                                                                </tr>
+                                                            }
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <div class="col-md-12 overflow-table">
+                                                <table id="gridMeterial" class="table table-bordered table-head-bg-info table-bordered-bd-info" role="grid" aria-describedby="add-row_info">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>SN</th>
+                                                            <th>Description</th>
+                                                            <th width="20%">Quantity</th>
+                                                            <th width="20%">Unit</th>
+                                                            <th width="20%">Weight</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @for (int i = 0, j = 1; i < Model.Meterials.Count(); i++, j++)
+                                                        {
+                                                            <tr>
+                                                                <td class="text-center">
+                                                                    <label >@j</label>
+                                                                </td>
+                                                                <td>
+                                                                    @Model.Meterials[i].Description
+                                                                </td>
+                                                                <td>
+                                                                   @Model.Meterials[i].Quantity
+                                                                </td>
+                                                                <td>
+                                                                    <select class="form-control" asp-for="Meterials[i].PackingTypeID" asp-items="ViewBag.PackingTypes"><option></option></select>
+                                                                </td>
+                                                                <td>
+                                                                    @Model.Meterials[i].Weight
+                                                                </td>
+
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        }
+
+                                        <div class="col-12">
+										
+											<div class="row ml-2 mt-2 mb-2 d-flex">
+											@for(int i=0;i<Model.MeterialFiles.Count();i++)
+											{
+												<div class="image-holder" id="MeterialImage_@i" onclick="showImageInPopup(this)" data-toggle="modal" data-target="#photViewer" style="background:#eee no-repeat center center;background-image:url(@Model.MeterialFiles[i].FileName)">	</div>
+											}
+										
+										</div>
+									</div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+
+                        <!--Approval History-->
+                        <div class="card card-with-nav">
+                            <div class="card-header">
+                                <div class="row row-nav-line">
+                                    <ul class="nav nav-tabs nav-line nav-color-secondary" role="tablist">
+                                        <li class="nav-item"> <a class="nav-link" role="tab" aria-selected="true">Approval History</a> </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card-body">
+
+                                <div class="row">
+                                    <div class="col-md-12 overflow-table">
+                                        <table class="table table-bordered table-head-bg-info table-bordered-bd-info" role="grid" aria-describedby="add-row_info">
+                                            <thead>
+                                                <tr>
+                                                    <th>Stage</th>
+                                                    <th>User Group</th>
+                                                    <th>User Name</th>
+                                                    <th>Processed On</th>
+                                                    <th>Status</th>
+                                                    <th>Remarks</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @for (int i = 0, j = 1; i < Model.ApprovalHistory.Count(); i++, j++)
+                                                {
+                                                    <tr>
+                                                        <td class="text-center">
+                                                            @Model.ApprovalHistory[i].Stage
+                                                        </td>
+                                                        <td>
+                                                            @Model.ApprovalHistory[i].UserGroup
+                                                        </td>
+                                                        <td>
+                                                            @Model.ApprovalHistory[i].ApprovedBy
+                                                        </td>
+                                                        <td>
+                                                            @Model.ApprovalHistory[i].ProcessedOn
+                                                        </td>
+                                                        <td>
+                                                            @Model.ApprovalHistory[i].Status
+                                                        </td>
+                                                        <td>
+                                                            @Model.ApprovalHistory[i].Remarks
+                                                        </td>
+
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Approval History-->
+                        <!--Tracking History-->
+                        @if (Model.TrackingHistory.Count > 0)
+                        {
+                            <div class="card card-with-nav">
+                                <div class="card-header">
+                                    <div class="row row-nav-line">
+                                        <ul class="nav nav-tabs nav-line nav-color-secondary" role="tablist">
+                                            <li class="nav-item"> <a class="nav-link" role="tab" aria-selected="true">Tracking History</a> </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+
+                                    <div class="row">
+                                        <div class="col-md-12 overflow-table">
+                                            <table class="table table-bordered table-head-bg-info table-bordered-bd-info" role="grid" aria-describedby="add-row_info">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Processd By</th>
+                                                        <th>Status</th>
+                                                        <th>Added On</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @for (int i = 0, j = 1; i < Model.TrackingHistory.Count(); i++, j++)
+                                                    {
+                                                        <tr>
+                                                            <td>
+                                                                @Model.TrackingHistory[i].ProcessedBy
+                                                            </td>
+                                                            <td>
+                                                                @Model.TrackingHistory[i].Status
+                                                            </td>
+                                                            <td>
+                                                                @Model.TrackingHistory[i].AddedOn
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        <!--Tracking History-->
+
+                    </div>
+                </div>
+
+
+            </form>
+        </div>
+    </div>
+</div>
+
+

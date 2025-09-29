@@ -1,0 +1,13 @@
+﻿<button type="button" id="btnSave" class="btn btn-success">Save</button>
+
+<script>
+    $(function () {
+        $('#btnSave').click(function (evt) {
+            PostForm(evt, '/@ViewData["PageURL"]?handler=save', '#formBasic', "saved");
+        });
+
+        saved = function (data) {
+            successMessage(data.ResponseMessage, data.ResponseTitle,'@ViewData["MasterPageURL"]');
+        }
+    });
+</script>

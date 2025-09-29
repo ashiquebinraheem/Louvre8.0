@@ -1,0 +1,12 @@
+﻿@page "/rejected-project-asset-requests"
+@model Louvre.Pages.ProjectAsset.RejectedProjectRequestsModel
+@{
+	ViewData["Title"] = "Rejected Requests";
+	ViewData["ParentMenu"] = "Project Asset Entry";
+	ViewData["PageURL"] = "rejected-project-asset-requests";
+	ViewData["ItemPageURL"] = "project-asset-request";
+	ViewData["ItemIDFieldName"] = "RequestID";
+	ViewData["HideNewButton"] = true;
+}
+
+<partial name="_PaginationGrid"/>

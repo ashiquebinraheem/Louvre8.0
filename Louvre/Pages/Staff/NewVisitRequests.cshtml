@@ -1,0 +1,11 @@
+﻿@page "/new-visit-requests"
+@model Louvre.Pages.NewVisitRequestsModel
+@{
+    ViewData["Title"] = "New Visit Requests";
+    ViewData["PageURL"] = "new-visit-requests";
+    ViewData["ItemPageURL"] = "approve-visit-request";
+    ViewData["ItemIDFieldName"] = "VisitRequestID";
+    ViewData["HideNewButton"] = true;
+}
+
+<partial name="_PaginationGrid"/>

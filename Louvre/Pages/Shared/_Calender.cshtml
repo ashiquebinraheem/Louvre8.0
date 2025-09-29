@@ -1,0 +1,138 @@
+﻿
+<link href='/plugins/calender/core/main.css' rel='stylesheet' />
+<link href='/plugins/calender/daygrid/main.css' rel='stylesheet' />
+<link href='/plugins/calender/timegrid/main.css' rel='stylesheet' />
+<link href='/plugins/calender/list/main.css' rel='stylesheet' />
+<script src='/plugins/calender/core/main.js'></script>
+<script src='/plugins/calender/interaction/main.js'></script>
+<script src='/plugins/calender/daygrid/main.js'></script>
+<script src='/plugins/calender/timegrid/main.js'></script>
+<script src='/plugins/calender/list/main.js'></script>
+
+<script>
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var calendarEl = document.getElementById('calendar');
+
+        var eventData=@Html.Raw(Json.Serialize(ViewData["CalenderData"]));
+        var d = new Date();
+        var yyyy = d.getFullYear().toString();
+        var mm = (d.getMonth()+1).toString(); // getMonth() is zero-based
+        var dd  = d.getDate().toString();
+        var strDate = yyyy + "-" + (mm[1]?mm:"0"+mm[0]) + "-" + (dd[1]?dd:"0"+dd[0]);;
+
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            plugins: ['interaction', 'dayGrid', 'timeGrid', 'list'],
+            header: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+            },
+            defaultDate: strDate,//'2020-02-12',
+            navLinks: true, // can click day/week names to navigate views
+            businessHours: true, // display business hours
+            editable: false,
+            events: eventData,
+            eventClick: function(arg) {
+                loadDetails(arg.event.id, arg.event.groupId);
+            }
+            //events: [
+            //    {
+            //        title: 'Business Lunch',
+            //        start: '2020-02-03T13:00:00',
+            //        constraint: 'businessHours'
+            //    },
+            //    {
+            //        title: 'Meeting',
+            //        start: '2020-02-13T11:00:00',
+            //        constraint: 'availableForMeeting', // defined below
+            //        color: '#257e4a'
+            //    },
+            //    {
+            //        title: 'Conference',
+            //        start: '2020-02-18',
+            //        end: '2020-02-20'
+            //    },
+            //    {
+            //        title: 'Party',
+            //        start: '2020-02-29T20:00:00'
+            //    },
+
+            //    // areas where "Meeting" must be dropped
+            //    {
+            //        groupId: 'availableForMeeting',
+            //        start: '2020-02-11T10:00:00',
+            //        end: '2020-02-11T16:00:00',
+            //        rendering: 'background'
+            //    },
+            //    {
+            //        groupId: 'availableForMeeting',
+            //        start: '2020-02-13T10:00:00',
+            //        end: '2020-02-13T16:00:00',
+            //        rendering: 'background'
+            //    },
+
+            //    // red areas where no events can be dropped
+            //    {
+            //        start: '2020-02-24',
+            //        end: '2020-02-28',
+            //        overlap: false,
+            //        rendering: 'background',
+            //        color: '#ff9f89'
+            //    },
+            //    {
+            //        start: '2020-02-06',
+            //        end: '2020-02-08',
+            //        overlap: false,
+            //        rendering: 'background',
+            //        color: '#ff9f89'
+            //    }
+            //]
+        });
+
+        calendar.render();
+    });
+
+</script>
+<style>
+
+
+    #calendar {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+</style>
+
+
+
+<div class="card">
+    <div class="card-body">
+        <div class="chart-container" style="min-height: 375px">
+            <div id='calendar'></div>
+        </div>
+
+    </div>
+
+    @*<div class="col-md-4">
+            <div class="card card-secondary">
+                <div class="card-header">
+                    <div class="card-title">Daily Sales</div>
+                    <div class="card-category">March 25 - April 02</div>
+                </div>
+                <div class="card-body pb-0">
+                    <div class="mb-4 mt-2">
+                        <h1>$4,578.58</h1>
+                    </div>
+                    <div class="pull-in">
+                        <canvas id="dailySalesChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="card card-info bg-info-gradient">
+                <div class="card-body">
+                    <h4 class="mb-1 fw-bold">Tasks Progress</h4>
+                    <div id="task-complete" class="chart-circle mt-4 mb-3"></div>
+                </div>
+            </div>
+        </div>*@
+</div>

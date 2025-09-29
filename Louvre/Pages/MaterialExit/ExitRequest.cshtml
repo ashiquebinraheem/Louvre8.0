@@ -1,0 +1,1097 @@
+﻿@page "/material-exit-request/{id?}"
+@model Louvre.Pages.ExitRequestModel
+@{
+	if (Model.Data == null)
+	{
+		ViewData["Title"] = "New Request";
+	}
+	else
+	{
+		ViewData["Title"] = "Edit Request";
+	}
+	ViewData["ParentMenu"] = "Material Exit";
+	ViewData["PageURL"] = "material-exit-request";
+	ViewData["MasterPageURL"] = "home";
+}
+
+
+<div class="main-panel">
+	<div class="content">
+		<div class="page-inner">
+			<partial name="_BreadCrumb" />
+			<form method="post" id="formBasic" enctype="multipart/form-data">
+				<div class="row">
+					<div class="col-md-9">
+						<input type="hidden" asp-for="Data.RequestID" />
+						<input type="hidden" asp-for="Data.RequestNo" />
+						<input type="hidden" asp-for="Vehicles.RequestVehicleID" />
+
+						<div class="card card-with-nav">
+							<div class="card-header">
+								<div class="row row-nav-line">
+									<ul class="nav nav-tabs nav-line nav-color-secondary" role="tablist">
+										<li class="nav-item"> <a class="nav-link" role="tab" aria-selected="true">Basic Information</a> </li>
+									</ul>
+								</div>
+							</div>
+							<div class="card-body">
+
+								<div class="row">
+
+									@if (Model.Data!=null && Model.Data.RequestNo != 0)
+									{
+										<div class="col-md-12 mb-3">Request No: @Model.Data.RequestNo</div>
+									}
+
+									<div class="col-md-12">
+										<div class="form-group form-group-default">
+											<label>Requester</label>
+											<select class="form-control" asp-for="Data.EmployeeID" autofocus required>
+												<option></option>
+												<option value="-1">--New--</option>
+											</select>
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="form-group form-group-default">
+											<label>Designation</label>
+											<input type="text" class="form-control" id="txtEmployeeDesignation" readonly />
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="form-group form-group-default">
+											<label>Company</label>
+											<input type="text" class="form-control" id="txtEmployeeCompany" readonly />
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="form-group form-group-default">
+											<label>Email address</label>
+											<input type="text" class="form-control" id="txtEmployeeEmail" readonly />
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="form-group form-group-default">
+											<label>Mobile No</label>
+											<input type="text" class="form-control" id="txtEmployeeMobile" readonly />
+										</div>
+									</div>
+								</div>
+
+							</div>
+						</div>
+
+						<div class="card card-with-nav">
+							<div class="card-header">
+								<div class="row row-nav-line">
+									<ul class="nav nav-tabs nav-line nav-color-secondary" role="tablist">
+										<li class="nav-item"> <a class="nav-link" role="tab" aria-selected="true">Request Information</a> </li>
+									</ul>
+								</div>
+							</div>
+							<div class="card-body">
+
+
+								<div class="row">
+									<div class="col-md-6">
+										<div class="form-group form-group-default">
+											<label>Company</label>
+											<select class="form-control" id="cmbBranch" asp-for="Data.BranchID" required>
+											</select>
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="form-group form-group-default">
+											<label>Sub Company</label>
+											<select class="form-control" asp-for="Data.SubBranchID" required id="cmbSubBranch">
+											</select>
+										</div>
+									</div>
+
+									<div class="col-md-6">
+										<div class="form-group form-group-default">
+											<label>Request Mode</label>
+											<select class="form-control" asp-for="Data.RequestModeID" required id="cmbRequestMode">
+											</select>
+										</div>
+									</div>
+
+									<div class="col-md-6">
+										<div class="form-group form-group-default">
+											<label>Location</label>
+											<select class="form-control" asp-for="Data.LocationID" required id="cmbLocation">
+											</select>
+										</div>
+									</div>
+
+									<div class="col-md-6">
+										<div class="form-group form-group-default">
+											<label>Date</label>
+											<input type="date" min="@ViewData["FromDate"]" max="@ViewData["ToDate"]" asp-for="Data.Date" id="txtDate" class="form-control" required />
+										</div>
+									</div>
+
+									<div class="col-md-6">
+										<div class="form-group form-group-default">
+											<label>Choose Slot</label>
+											<select class="form-control" asp-for="Data.SlotID" required id="cmbSlot">
+											</select>
+										</div>
+									</div>
+
+									@* <div class="col-md-6">
+										<div class="form-group form-group-default">
+											<label>Host Email address</label>
+											<input type="text" asp-for="Data.HostEmail" class="form-control" />
+										</div>
+									</div>
+ *@
+									<div class="col-md-6">
+										<div class="form-group form-group-default">
+											<label>Driver</label>
+											<select class="form-control" asp-for="Vehicles.EmployeeID" id="cmbDriver" asp-items="ViewBag.EmployeesSelectList" required>
+												<option></option>
+												<option value="-1">--New--</option>
+											</select>
+										</div>
+									</div>
+
+									<div class="col-md-6">
+										<div class="form-group form-group-default">
+											<label>Vehicle</label>
+											<select class="form-control" asp-for="Vehicles.VehicleID" id="VehicleID" asp-items="ViewBag.Vehicles" required>
+												<option></option>
+												<option value="-1">--New--</option>
+											</select>
+										</div>
+									</div>
+								</div>
+								<div class="row" id="divMaterialDetails">
+									<div class="col-md-6">
+										<div class="form-group form-group-default">
+											<label>Material Type</label>
+											<select class="form-control" required asp-for="Data.MeterialTypeID" asp-items="ViewBag.MeterialTypes" id="cmbMaterialType">
+												<option></option>
+											</select>
+										</div>
+									</div>
+
+									<div class="col-md-6 col-sm-12">
+										<div class="form-group form-group-default">
+											<label>Storage Location</label>
+											<select class="form-control" required asp-for="Data.StorageLocationID" asp-items="ViewBag.StorageLocationTypes" id="cmbMaterialType">
+												<option></option>
+											</select>
+										</div>
+									</div>
+
+									<div class='col-md-6' id="divExplosive">
+										<div class="form-check">
+											<label class="form-check-label">
+												<input class="form-check-input" type="checkbox" asp-for="Data.ContainsExplosive" id="cbContainsExplosive">
+												<span class="form-check-sign">Contains hazardous material</span>
+											</label>
+										</div>
+									</div>
+
+									<div class="col-md-12">
+										<div class="form-group form-group-default">
+											<label>Remarks if any</label>
+											<textarea asp-for="Data.Narration" class="form-control">
+                                        </textarea>
+										</div>
+									</div>
+								</div>
+
+
+
+								<div class="row">
+									<div class="col-md-6">
+										<table id="gridPassengers" class="table table-bordered table-head-bg-info table-bordered-bd-info" role="grid" aria-describedby="add-row_info">
+											<thead>
+												<tr>
+													<th>Co Passengers</th>
+													<th width="20px"></th>
+												</tr>
+											</thead>
+											<tbody>
+												@for (int i = 0, j = 1; i < Model.Passengers.Count(); i++, j++)
+												{
+													<tr>
+														<td>
+															<input type="hidden" asp-for="Passengers[i].PassengerID" />
+															<select class="form-control" asp-for="Passengers[i].EmployeeID" asp-items="ViewBag.EmployeesSelectList"><option></option></select>
+														</td>
+														<td style="width:10px">
+															<a onclick="removeTableRow(this,$(this).closest('table').attr('id'))"><span class="fa fa-trash"></span></a>
+														</td>
+													</tr>
+												}
+											</tbody>
+											<tfoot>
+												<tr>
+													<td>
+														<select class="form-control" id="PassengerEmployeeID" asp-items="ViewBag.EmployeesSelectList">
+															<option></option>
+															<option value="-1">--New--</option>
+														</select>
+													</td>
+													<td style="width:10px">
+														<a id="btnAddPassenger" class="" onclick="addPassengerItem($(this).closest('table').attr('id'));"><i class="fa fa-plus-circle"></i></a>
+													</td>
+												</tr>
+											</tfoot>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						@if (Model.RequestStatusID == 3)
+						{
+							<div class="card card-with-nav">
+								<div class="card-header">
+									<div class="row row-nav-line">
+										<ul class="nav nav-tabs nav-line nav-color-secondary" role="tablist">
+											<li class="nav-item"> <a class="nav-link" role="tab" aria-selected="true">Rejection Details</a> </li>
+										</ul>
+									</div>
+								</div>
+								<div class="card-body">
+									<div class="row">
+										<div class="col-md-12">
+											<div class="form-group form-group-default">
+												<label>Remark</label>
+												<textarea class="form-control" asp-for="RequestApproval.Remarks" style="color:red">
+                                                </textarea>
+											</div>
+										</div>
+
+									</div>
+								</div>
+							</div>
+						}
+
+						<div class="card card-with-nav" id="divMaterial">
+							<div class="card-header">
+								<div class="row row-nav-line">
+									<ul class="nav nav-tabs nav-line nav-color-secondary" role="tablist">
+										<li class="nav-item"> <a class="nav-link" role="tab" aria-selected="true">Material information</a> </li>
+									</ul>
+								</div>
+							</div>
+							<div class="card-body">
+
+								<div class="row">
+
+									<div class="col-md-12 overflow-table">
+										<table id="gridMaterial" class="table table-bordered table-head-bg-info table-bordered-bd-info" role="grid" aria-describedby="add-row_info">
+											<thead>
+												<tr>
+													<th>SN</th>
+													<th>Description</th>
+													<th width="20%">Quantity</th>
+													<th width="20%">Unit</th>
+													<th width="20%">Weight</th>
+													<th width="20px"></th>
+												</tr>
+											</thead>
+											<tbody>
+												@for (int i = 0, j = 1; i < Model.Meterials.Count(); i++, j++)
+												{
+													<tr>
+														<td class="text-center">
+															<input type="hidden" asp-for="Meterials[i].RequestMeterialID" />
+															<label name="Materials[@i].RowSlNo">@j</label>
+														</td>
+														<td>
+															<input class="form-control" type="text" asp-for="Meterials[i].Description">
+														</td>
+														<td>
+															<input class="form-control integer" type="text" asp-for="Meterials[i].Quantity">
+														</td>
+														<td>
+															<select class="form-control" asp-for="Meterials[i].PackingTypeID" asp-items="ViewBag.PackingTypes"><option></option></select>
+														</td>
+														<td>
+															<input class="form-control" type="text" asp-for="Meterials[i].Weight">
+														</td>
+														<td style="width:10px">
+															<a onclick="removeTableRow(this,$(this).closest('table').attr('id'))"><span class="fa fa-trash"></span></a>
+														</td>
+													</tr>
+												}
+											</tbody>
+											<tfoot>
+												<tr>
+													<td></td>
+													<td>
+														<input class="form-control" type="text" id="Description">
+													</td>
+													<td>
+														<input class="form-control integer" type="text" id="Quantity">
+													</td>
+													<td>
+														<select class="form-control" id="PackingTypeID" asp-items="ViewBag.PackingTypes">
+															<option></option>
+														</select>
+													</td>
+													<td>
+														<input class="form-control" type="text" id="Weight" />
+													</td>
+													<td style="width:10px">
+														<a id="btnAddMaterial" class="" onclick="addMaterialItem($(this).closest('table').attr('id'));"><i class="fa fa-plus-circle"></i></a>
+													</td>
+												</tr>
+											</tfoot>
+										</table>
+									</div>
+								</div>
+
+								<div class="col-12">
+										Material Photos 
+										<input type="file" asp-for="MeterialMedias" multiple/>
+										
+										
+											<div class="row ml-2 mt-2 mb-2 d-flex">
+											@for(int i=0;i<Model.MeterialFiles.Count();i++)
+											{
+												<div id="divMeterialImage_@i">
+												<div class="image-holder" id="MeterialImage_@i" onclick="showImageInPopup(this)" data-toggle="modal" data-target="#photViewer" style="background:#eee no-repeat center center;background-image:url(@Model.MeterialFiles[i].FileName)">	
+												</div>
+													<a class="image-holder-span text-center" onclick="removeMateriaMedia(`divMeterialImage_@i`,@Model.MeterialFiles[i].MeterialMediaID)"><i class="fa fa-trash"></i> Remove </a>
+											</div>
+											}
+										
+										</div>
+									</div>
+							</div>
+						</div>
+
+						<div class="card card-with-nav">
+							<div class="card-header">
+								<div class="row row-nav-line">
+									<ul class="nav nav-tabs nav-line nav-color-secondary" role="tablist">
+										<li class="nav-item"> <a class="nav-link" role="tab" aria-selected="true">Documents (Supported Types: Jpg, Png, Pdf)</a> </li>
+									</ul>
+								</div>
+							</div>
+							<div class="card-body">
+								<div class="row">
+
+									@for (int i = 0; i < Model.RequestDocuments.Count; i++)
+									{
+										<input type="hidden" asp-for="@Model.RequestDocuments[i].MediaID" />
+										<input type="hidden" asp-for="@Model.RequestDocuments[i].MediaID2" />
+										<input type="hidden" asp-for="@Model.RequestDocuments[i].DocumentID" />
+										<input type="hidden" asp-for="@Model.RequestDocuments[i].DocumentTypeID" />
+										<input type="hidden" id="HasReqFile_@i" asp-for="@Model.RequestDocuments[i].HasFile" />
+										<input type="hidden" id="HasReqFile2_@i" asp-for="@Model.RequestDocuments[i].HasFile2" />
+
+										<div class='col-md-6 '>
+											<div class="form-group form-group-default">
+												<div class="row  py-3">
+													<div class="col-4 pl-2 document-label">@Model.RequestDocuments[i].DocumentTypeName</div>
+													<div class="col-2 uplod-icon my-auto">
+														<div class="image-upload">
+															<label for="ReqDocuments_@i"><i class="fa fa-file" style="font-size: 13px;"></i> <span class=" uplod-text">Front</span></label>
+															<input class="file-input" type="file" accept="image/x-png,image/gif,image/jpeg,application/pdf" id="ReqDocuments_@i" asp-for="ReqDocuments" onchange="showImage(this,'ReqDocuments_Img_'+@i)" />
+														</div>
+													</div>
+													<div class="col-2 uplod-icon my-auto">
+														<div class="image-upload">
+															<label for="ReqDocuments2_@i"><i class="fa fa-file" style="font-size: 13px;"> </i> <span class=" uplod-text">Back</span></label>
+															<input type="file" accept="image/x-png,image/gif,image/jpeg,application/pdf" id="ReqDocuments2_@i" asp-for="ReqDocuments2" onchange="showImage(this,'ReqDocuments2_Img_'+@i)" />
+														</div>
+													</div>
+													<div class="col-2"><div class="uplod-img my-auto photo-box shadow" id="ReqDocuments_Img_@i" onclick="showImageInPopup(this)" data-toggle="modal" data-target="#photViewer" style="background:#eee no-repeat center center;background-image:url(@Model.RequestDocuments[i].FileName)"></div></div>
+													<div class="col-2"><div class="uplod-img my-auto photo-box shadow" id="ReqDocuments2_Img_@i" onclick="showImageInPopup(this)" data-toggle="modal" data-target="#photViewer" style="background:#eee no-repeat center center;background-image:url(@Model.RequestDocuments[i].FileName2)"></div></div>
+												</div>
+											</div>
+										</div>
+										<div class='col-md-3'>
+											<div class="form-group form-group-default">
+												<label>Document No</label>
+												<input type="text" class="form-control" asp-for="RequestDocuments[i].DocumentNumber" />
+											</div>
+										</div>
+										<div class='col-md-3'>
+											<div class="form-group form-group-default">
+												<label>Expires On</label>
+												<input type="date" min="@ViewData["Today"]" class="form-control" asp-for="RequestDocuments[i].ExpiresOn" />
+											</div>
+										</div>
+									}
+
+
+								</div>
+								<div class="row" id="divCompanyDocuments">
+								</div>
+							</div>
+						</div>
+
+						<div class="card card-with-nav" id="divButtons">
+							<div class="card-body">
+								<div class="text-right">
+									<button type="button" id="btnSave" class="btn btn-success">Save</button>
+									<partial name="_DeleteButton" />
+								</div>
+								<partial name="_ErrorPartial" />
+							</div>
+						</div>
+
+					</div>
+				</div>
+
+				<input type="hidden" asp-for="CompanyID" />
+			</form>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="newEmployee" tabindex="-1" role="dialog" aria-labelledby="newEmployeeModalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<form method="post" id="formEmployee" enctype="multipart/form-data">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">Add Requester/Driver</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-group form-group-default">
+								<label>Name</label>
+								<input type="text" class="form-control" asp-for="Employee.EmployeeName" required />
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group form-group-default">
+								<label>Designation</label>
+								<input type="text" class="form-control" asp-for="Employee.DesignationName" list="lstDesignation" />
+								<datalist id="lstDesignation"></datalist>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group form-group-default">
+								<label>Company</label>
+								<input type="text" class="form-control" asp-for="Employee.CompanyName" list="lstCompany" />
+								<datalist id="lstCompany"></datalist>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group form-group-default">
+								<label>Email address</label>
+								<input type="text" class="form-control" asp-for="Employee.Email" required />
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group form-group-default">
+								<label>Mobile No</label>
+								<input type="text" class="form-control" asp-for="Employee.ContactNumber" />
+							</div>
+						</div>
+						<div class="col-md-6"></div>
+
+						@for (int i = 0; i < Model.EmployeeDocuments.Count; i++)
+						{
+							<input type="hidden" asp-for="@Model.EmployeeDocuments[i].MediaID" />
+							<input type="hidden" asp-for="@Model.EmployeeDocuments[i].MediaID2" />
+							<input type="hidden" asp-for="@Model.EmployeeDocuments[i].DocumentID" />
+							<input type="hidden" asp-for="@Model.EmployeeDocuments[i].DocumentTypeID" />
+							<input type="hidden" id="HasEmpFile_@i" asp-for="@Model.EmployeeDocuments[i].HasFile" />
+							<input type="hidden" id="HasEmpFile2_@i" asp-for="@Model.EmployeeDocuments[i].HasFile2" />
+
+
+							<div class='col-md-6 '>
+								<div class="form-group form-group-default">
+									<div class="row  py-3">
+										<div class="col-4 pl-2 document-label">@Model.EmployeeDocuments[i].DocumentTypeName</div>
+										<div class="col-2 uplod-icon my-auto">
+											<div class="image-upload">
+												<label for="EmpDocuments_@i"><i class="fa fa-file" style="font-size: 13px;">  </i> <span class=" uplod-text">Front</span></label>
+												<input class="file-input" type="file" accept="image/x-png,image/gif,image/jpeg,application/pdf" id="EmpDocuments_@i" asp-for="EmpDocuments" onchange="showImage(this,'EmpDocuments_Img_'+@i)" />
+											</div>
+										</div>
+										<div class="col-2 uplod-icon my-auto">
+											<div class="image-upload">
+												<label for="EmpDocuments2_@i"><i class="fa fa-file" style="font-size: 13px;"> </i> <span class=" uplod-text">Back</span></label>
+												<input type="file" accept="image/x-png,image/gif,image/jpeg,application/pdf" id="EmpDocuments2_@i" asp-for="EmpDocuments2" onchange="showImage(this,'EmpDocuments_Img2_'+@i)" />
+											</div>
+										</div>
+										<div class="col-2"><div class="uplod-img my-auto photo-box shadow" id="EmpDocuments_Img_@i" onclick="showImageInPopup(this)" data-toggle="modal" data-target="#photViewer" style="background:#eee no-repeat center center;background-image:url(@Model.EmployeeDocuments[i].FileName)"></div></div>
+										<div class="col-2"><div class="uplod-img my-auto photo-box shadow" id="EmpDocuments_Img2_@i" onclick="showImageInPopup(this)" data-toggle="modal" data-target="#photViewer" style="background:#eee no-repeat center center;background-image:url(@Model.EmployeeDocuments[i].FileName2)"></div></div>
+									</div>
+								</div>
+							</div>
+							<div class='col-md-3'>
+								<div class="form-group form-group-default">
+									<label>Document No</label>
+									<input type="text" class="form-control" asp-for="EmployeeDocuments[i].DocumentNumber" />
+								</div>
+							</div>
+							<div class='col-md-3'>
+								<div class="form-group form-group-default">
+									<label>Expires On</label>
+									<input type="date" min="@ViewData["Today"]" class="form-control" asp-for="EmployeeDocuments[i].ExpiresOn" />
+								</div>
+							</div>
+						}
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<input type="button" id="btnEmployeeSave" value="Save" class="btn btn-success" />
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+<div class="modal fade" id="newVehicle" tabindex="-1" role="dialog" aria-labelledby="newVehicleModalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<form method="post" id="formVehicle" enctype="multipart/form-data">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">Add Vehicle</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-group form-group-default">
+								<label>RegisterNo</label>
+								<input type="text" class="form-control" asp-for="Vehicle.RegisterNo" required />
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group form-group-default">
+								<label>Vehicle Type</label>
+								<select class="form-control" asp-for="Vehicle.VehicleTypeID" asp-items="ViewBag.VehicleTypes">
+									<option></option>
+								</select>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group form-group-default">
+								<label>Size</label>
+								<input type="text" class="form-control" asp-for="Vehicle.VehicleSize" />
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group form-group-default">
+								<label>Plate Number</label>
+								<input type="text" class="form-control" asp-for="Vehicle.PlateNo" />
+							</div>
+						</div>
+
+
+						@for (int i = 0; i < Model.VehicleDocuments.Count; i++)
+						{
+
+							<input type="hidden" asp-for="@Model.VehicleDocuments[i].MediaID" />
+							<input type="hidden" asp-for="@Model.VehicleDocuments[i].MediaID2" />
+							<input type="hidden" asp-for="@Model.VehicleDocuments[i].DocumentID" />
+							<input type="hidden" asp-for="@Model.VehicleDocuments[i].DocumentTypeID" />
+							<input type="hidden" id="HasVehicleFile_@i" asp-for="@Model.VehicleDocuments[i].HasFile" />
+							<input type="hidden" id="HasVehicleFile2_@i" asp-for="@Model.VehicleDocuments[i].HasFile2" />
+
+							<div class='col-md-6 '>
+								<div class="form-group form-group-default">
+									<div class="row  py-3">
+										<div class="col-4 pl-2 document-label">@Model.VehicleDocuments[i].DocumentTypeName</div>
+										<div class="col-2 uplod-icon my-auto">
+											<div class="image-upload">
+												<label for="VehDocuments_@i"><i class="fa fa-file" style="font-size: 13px;">  </i> <span class=" uplod-text">Front</span></label>
+												<input class="file-input" type="file" accept="image/x-png,image/gif,image/jpeg,application/pdf" id="VehDocuments_@i" asp-for="VehDocuments" onchange="showImage(this,'VehDocuments_Img_'+@i)" />
+											</div>
+										</div>
+										<div class="col-2 uplod-icon my-auto">
+											<div class="image-upload">
+												<label for="VehDocuments2_@i"><i class="fa fa-file" style="font-size: 13px;"> </i> <span class=" uplod-text">Back</span></label>
+												<input type="file" accept="image/x-png,image/gif,image/jpeg,application/pdf" id="VehDocuments2_@i" asp-for="VehDocuments2" onchange="showImage(this,'VehDocuments_Img2_'+@i)" />
+											</div>
+										</div>
+										<div class="col-2"><div class="uplod-img my-auto photo-box shadow" id="VehDocuments_Img_@i" onclick="showImageInPopup(this)" data-toggle="modal" data-target="#photViewer" style="background:#eee no-repeat center center;background-image:url(@Model.VehicleDocuments[i].FileName)"></div></div>
+										<div class="col-2"><div class="uplod-img my-auto photo-box shadow" id="VehDocuments_Img2_@i" onclick="showImageInPopup(this)" data-toggle="modal" data-target="#photViewer" style="background:#eee no-repeat center center;background-image:url(@Model.VehicleDocuments[i].FileName2)"></div></div>
+									</div>
+								</div>
+							</div>
+							<div class='col-md-3'>
+								<div class="form-group form-group-default">
+									<label>Document No</label>
+									<input type="text" class="form-control" asp-for="VehicleDocuments[i].DocumentNumber" />
+								</div>
+							</div>
+							<div class='col-md-3'>
+								<div class="form-group form-group-default">
+									<label>Expires On</label>
+									<input type="date" min="@ViewData["Today"]" class="form-control" asp-for="VehicleDocuments[i].ExpiresOn" />
+								</div>
+							</div>
+						}
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<input type="button" id="btnVehicleSave" value="Save" class="btn btn-success" />
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+
+<script>
+
+    //#region Global Variables
+
+    var employees = [], vehicles = [], companyDocumentCount=0, branches=[], requestModes=[], locations=[];
+    var slotId = 0;
+
+    var gridMaterials = [
+        {
+            FieldType: "slno"
+        },
+        {
+            FieldType: "text",
+            FieldName: "Description",
+            ControlName: "Description",
+            Required: "required"
+        },
+        {
+            FieldType: "text",
+            FieldName: "Quantity",
+            ControlName: "Quantity",
+            Required: "required",
+			Class:"integer"
+        },
+        {
+            FieldType: "select",
+            FieldName: "PackingTypeID",
+            ControlName: "PackingTypeID",
+            Required: "required"
+        },
+		{
+			FieldType:"text",
+			FieldName:"Weight",
+			ControlName:"Weight",
+			Class: "integer"
+		},
+        {
+            FieldType: "hidden",
+            FieldName: "RequestMeterialID",
+        },
+    ];
+
+    var gridPassengers = [
+        {
+            FieldType: "select",
+            FieldName: "EmployeeID",
+            ControlName: "PassengerEmployeeID",
+            Required: "required"
+        },
+        {
+            FieldType: "hidden",
+            FieldName: "PassengerID",
+        },
+    ];
+
+    //#endregion
+
+    $(function () {
+
+        $(document).ready(function () {
+
+            if (@Html.Raw(Json.Serialize(ViewData["NotApproved"] != null))) {
+                showMessage("You are currently in the verification process", "Oops..Your account not approved yet!!","error","home");
+                return;
+            }
+
+            employees =@Html.Raw(Json.Serialize(ViewData["Employees"]));
+            branches =@Html.Raw(Json.Serialize(ViewData["Branches"]));
+            requestModes =@Html.Raw(Json.Serialize(ViewData["RequestModes"]));
+            locations =@Html.Raw(Json.Serialize(ViewData["Locations"]));
+
+            fillBranch();
+            fillCombo('cmbRequestMode', 'RequestModeID', 'ModeName', requestModes, '  ');
+            fillCombo('Data_EmployeeID', 'EmployeeID', 'EmployeeName', employees, '<-Select One->', true);
+            fillSuggestion('lstDesignation', @Html.Raw(Json.Serialize(ViewData["Designations"])));
+            fillSuggestion('lstCompany', @Html.Raw(Json.Serialize(ViewData["Companies"])));
+
+            var requestData =@Html.Raw(Json.Serialize(Model.Data));
+            if (requestData != null) {
+                $("#Data_EmployeeID").val(requestData.EmployeeID);
+                $("#Data_EmployeeID").change();
+                $("#cmbBranch").val(requestData.BranchID);
+                $("#cmbBranch").change();
+                $("#cmbSubBranch").val(requestData.SubBranchID);
+                $("#cmbRequestMode").val(requestData.RequestModeID);
+                $("#cmbRequestMode").change();
+                $("#cmbLocation").val(requestData.LocationID);
+                slotId = requestData.SlotID;
+                if (@Model.RequestStatusID != 1 && @Model.RequestStatusID != 3) {
+                    $("#divButtons").hide();
+                }
+            }
+        });
+
+
+        $('#btnSave').click(function (evt) {
+
+            if ($("#Description").val() != "") {
+                $("#btnAddMaterial").click();
+            }
+
+            if ($("#PassengerEmployeeID").val() != "") {
+                $("#btnAddPassenger").click();
+            }
+
+            if ($(`#gridMaterial tbody tr`).length == 0 && $("#cmbRequestMode").val()=="3") {
+                errorMessage("There is no material added!!");
+                return;
+            }
+
+            //if ($(`#gridVehicle tbody tr`).length == 0) {
+            //    errorMessage("There is no vehicle added!!");
+            //    return;
+            //}
+
+			setHasImageField(companyDocumentCount, 'CompDocuments', 'HasCompFile');
+			setHasImageField(companyDocumentCount, 'CompDocuments2', 'HasCompFile2');
+			setHasImageField(@Model.RequestDocuments.Count, 'ReqDocuments', 'HasReqFile');
+			setHasImageField(@Model.RequestDocuments.Count, 'ReqDocuments2', 'HasReqFile2');
+            PostForm(evt, '/@ViewData["PageURL"]?handler=save', '#formBasic', "saved");
+        });
+
+        saved = function (data) {
+            successMessage(data.ResponseMessage, data.ResponseTitle,'@ViewData["MasterPageURL"]');
+        }
+
+        $("#txtDate").change(function () {
+
+            cntr = [];
+            cntr.push($('#cmbBranch'));
+		    if (!isModelStateValid(cntr))
+			    return;
+
+            PostFormWithoutEvent('/@ViewData["PageURL"]?handler=loadSlot', '#formBasic', "loadSlots");
+        });
+
+        $("#txtDate").blur(function () {
+            $("#txtDate").change();
+        });
+
+        loadSlots = function (data) {
+            fillCombo('cmbSlot', 'ID', 'Value', data, '  ');
+
+            if (slotId != 0) {
+                $("#cmbSlot").val(slotId);
+                slotId = 0;
+            }
+        }
+
+        //#region Branch
+
+        $("#cmbBranch").change(function () {
+            fillSubBranch();
+
+            if ($("#txtDate").val() != null) {
+                $("#txtDate").change();
+            }
+        });
+
+        fillBranch = function () {
+		    var cmb = $("#cmbBranch");
+		    cmb.empty();
+			cmb.append($("<option/>").val(null).html(''));
+            $.each(branches, function () {
+                if(this.ParentBranchID==null && this.BranchName!="Guggenheim")
+				    cmb.append($("<option/>").val(this['BranchID']).html(this['BranchName']));
+			});
+        }
+
+        fillSubBranch = function () {
+		    var cmb = $("#cmbSubBranch");
+		    cmb.empty();
+			cmb.append($("<option/>").val(null).html(''));
+            $.each(branches, function () {
+                if(this.ParentBranchID==$("#cmbBranch").val())
+				    cmb.append($("<option/>").val(this['BranchID']).html(this['BranchName']));
+			});
+        }
+
+        //#endregion
+
+        //#region Request Mode
+
+        $("#cmbRequestMode").change(function () {
+            fillLocation();
+
+            if ($(this).val() == "3") {
+                $("#divMaterial").show();
+                $("#divMaterialDetails").show();
+            }
+            else {
+                $("#divMaterial").hide();
+                $("#divMaterialDetails").hide();
+            }
+        });
+
+        fillLocation = function () {
+
+            var requestMode = getRowByFieldNameValue(requestModes, 'RequestModeID', $("#cmbRequestMode").val())
+
+		    var cmb = $("#cmbLocation");
+		    cmb.empty();
+			cmb.append($("<option/>").val(null).html(''));
+            $.each(locations, function () {
+                if(this.LocationTypeID==requestMode.LocationTypeID && this.LocationName !="Construction Access")
+				    cmb.append($("<option/>").val(this['LocationID']).html(this['LocationName']));
+			});
+        }
+
+        //#endregion
+
+        //#region Request Type
+
+        $("#cmbMaterialType").change(function () {
+
+            if ($(this).val() == "1") {
+                $("#divExplosive").show();
+            }
+            else {
+                $("#divExplosive").hide();
+                $("#cbContainsExplosive").prop('checked', false);
+            }
+        });
+
+        //#endregion
+
+        //#region Employee
+
+        $("#Data_EmployeeID").change(function () {
+            if ($("#Data_EmployeeID").val() == "-1") {
+                $("#newEmployee").modal('show');
+                $("#Employee_EmployeeName").focus();
+            }
+            else if ($("#Data_EmployeeID").val() != "0") {
+                var employee = getRowByFieldNameValue(employees, "EmployeeID", $("#Data_EmployeeID").val());
+
+                $("#txtEmployeeDesignation").val(employee.DesignationName);
+                $("#txtEmployeeCompany").val(employee.CompanyName);
+                $("#txtEmployeeEmail").val(employee.Email);
+                $("#txtEmployeeMobile").val(employee.ContactNumber);
+
+                $("#CompanyID").val(employee.CompanyID)
+                loadCompanyDocuments();
+            }
+        });
+
+        $("#Data_EmployeeID").blur(function () {
+            $("#Data_EmployeeID").change();
+        })
+
+        $("#cmbDriver").change(function () {
+            if ($(this).val() == "-1") {
+                $("#newEmployee").modal('show');
+                $("#Employee_EmployeeName").focus();
+            }
+        });
+
+        $("#cmbDriver").blur(function () {
+            $("#cmbDriver").change();
+        })
+
+        $("#PassengerEmployeeID").change(function () {
+            if ($(this).val() == "-1") {
+                $("#newEmployee").modal('show');
+                $("#Employee_EmployeeName").focus();
+            }
+        });
+
+        $("#PassengerEmployeeID").blur(function () {
+            $("#PassengerEmployeeID").change();
+        })
+
+        $("#btnEmployeeSave").click(function (evt) {
+
+			setHasImageField(@Model.EmployeeDocuments.Count, 'EmpDocuments', 'HasEmpFile');
+			setHasImageField(@Model.EmployeeDocuments.Count, 'EmpDocuments2', 'HasEmpFile2');
+
+            PostForm(evt, '/@ViewData["PageURL"]?handler=saveEmployee', '#formEmployee', "employeeSaved");
+        });
+
+        employeeSaved = function (data) {
+            $("#newEmployee").modal('hide');
+            clearForm('formEmployee');
+			clearImages('EmpDocuments_Img',@Model.EmployeeDocuments.Count);
+			clearImages('EmpDocuments_Img2',@Model.EmployeeDocuments.Count);
+
+            employees = data.Employees;
+
+            var selectedEmployeeID = $("#Data_EmployeeID").val();
+            if (selectedEmployeeID == "-1") {
+                selectedEmployeeID = data.NewEmployeeID;
+            }
+
+
+            var selectedDriverID = $("#cmbDriver").val();
+            if (selectedDriverID == "-1") {
+                selectedDriverID = data.NewEmployeeID;
+            }
+
+            var selectedPassengerID = $("#PassengerEmployeeID").val();
+            if (selectedPassengerID == "-1") {
+                selectedPassengerID = data.NewEmployeeID;
+            }
+
+            fillCombo('Data_EmployeeID', 'EmployeeID', 'EmployeeName', employees, '<-Select One->', true);
+            fillCombo('cmbDriver', 'EmployeeID', 'EmployeeName', employees, '<-Select One->', true);
+            fillCombo('PassengerEmployeeID', 'EmployeeID', 'EmployeeName', employees, '<-Select One->', true);
+
+            $("#Data_EmployeeID").val(selectedEmployeeID);
+            $("#Data_EmployeeID").change();
+
+            $("#cmbDriver").val(selectedDriverID);
+            $("#PassengerEmployeeID").val(selectedPassengerID);
+        }
+        //#endregion
+
+        //#region Vehicle
+
+        $("#VehicleID").change(function () {
+            if ($(this).val() == "-1") {
+                $("#newVehicle").modal('show');
+                $("#Vehicle_RegisterNo").focus();
+            }
+        });
+
+        $("#VehicleID").blur(function () {
+            $("#VehicleID").change();
+        })
+
+        $("#btnVehicleSave").click(function (evt) {
+
+			setHasImageField(@Model.VehicleDocuments.Count, 'VehDocuments', 'HasVehicleFile');
+			setHasImageField(@Model.VehicleDocuments.Count, 'VehDocuments2', 'HasVehicleFile2');
+
+            PostForm(evt, '/@ViewData["PageURL"]?handler=saveVehicle', '#formVehicle', "vehicleSaved");
+        });
+
+        vehicleSaved = function (data) {
+            $("#newVehicle").modal('hide');
+            clearForm('formVehicle');
+			clearImages('VehDocuments_Img',@Model.VehicleDocuments.Count);
+			clearImages('VehDocuments_Img2',@Model.VehicleDocuments.Count);
+
+            vehicles = data.Vehicles;
+            fillCombo('VehicleID', 'VehicleID', 'RegisterNo', vehicles, '  ', true);
+            $("#VehicleID").val(data.NewVehicleID);
+        }
+
+        //#endregion
+
+        //#region Company Documents
+
+        loadCompanyDocuments = function () {
+            PostFormWithoutEvent('/@ViewData["PageURL"]?handler=loadCompanyDocuments', '#formBasic', "companyDocumentLoad");
+        };
+
+        companyDocumentLoad = function (data) {
+
+            var documentData = '';
+            companyDocumentCount = data.length;
+            for (var i = 0; i < data.length; i++)
+            {
+                var expireson = "";
+                if (data[i].ExpiresOn != null) {
+                    expireson = `value="${new Date(data[i].ExpiresOn).toDateInputValue()}"`;
+                }
+
+                documentData +=
+					`<input type="hidden" name="CompanyDocuments[${i}].MediaID" value="${data[i].MediaID}"/>
+						<input type="hidden" name="CompanyDocuments[${i}].MediaID2" value="${data[i].MediaID2}"/>
+                        <input type="hidden" name="CompanyDocuments[${i}].DocumentID" value="${data[i].DocumentID}"/>
+                        <input type="hidden" name="CompanyDocuments[${i}].DocumentTypeID" value="${data[i].DocumentTypeID}"/>
+                        <input type="hidden" id="HasCompFile_${i}" name="CompanyDocuments[${i}].HasFile"/>
+						<input type="hidden" id="HasCompFile2_${i}" name="CompanyDocuments[${i}].HasFile2"/>
+
+
+						<div class='col-md-6 '>
+											<div class="form-group form-group-default">
+												<div class="row  py-3">
+													<div class="col-4 pl-2 document-label">${data[i].DocumentTypeName}</div>
+													<div class="col-2 uplod-icon my-auto">
+														<div class="image-upload">
+															<label for="CompDocuments_${i}"><i class="fa fa-file" style="font-size: 13px;">  </i> <span class=" uplod-text">Front</span></label>
+															<input class="file-input" type="file" accept="image/x-png,image/gif,image/jpeg,application/pdf" id="CompDocuments_${i}" name="CompDocuments" onchange="showImage(this,'CompDocuments_Img_'+${i})" />
+														</div>
+													</div>
+													<div class="col-2 uplod-icon my-auto">
+														<div class="image-upload">
+															<label for="CompDocuments2_${i}"><i class="fa fa-file" style="font-size: 13px;"> </i> <span class=" uplod-text">Back</span></label>
+															<input type="file"  accept="image/x-png,image/gif,image/jpeg,application/pdf" id="CompDocuments2_${i}" name="CompDocuments2" onchange="showImage(this,'CompDocuments_Img2_'+${i})" />
+														</div>
+													</div>`;
+
+				if (data[i].FileName == undefined) {
+					documentData += `<div class="col-2"><div class="photo-box shadow" id="CompDocuments_Img_${i}" onclick="showImageInPopup(this)" data-toggle="modal" data-target="#photViewer" style="background:#eee no-repeat center center;"></div></div>`;
+				}
+				else {
+					documentData += `<div class="col-2"><div class="photo-box shadow" id="CompDocuments_Img_${i}" onclick="showImageInPopupPdf(this)" data-toggle="modal" data-target="#photViewer" style="background:#eee no-repeat center center;background-image:url(${data[i].FileName})"></div></div>`;
+				}
+
+				if (data[i].FileName2 == undefined) {
+					documentData += `<div class="col-2"><div class="photo-box shadow" id="CompDocuments_Img2_${i}" onclick="showImageInPopup(this)" data-toggle="modal" data-target="#photViewer" style="background:#eee no-repeat center center;"></div></div>`;
+				}
+				else {
+					documentData += `<div class="col-2"><div class="photo-box shadow" id="CompDocuments_Img2_${i}" onclick="showImageInPopupPdf(this)" data-toggle="modal" data-target="#photViewer" style="background:#eee no-repeat center center;background-image:url(${data[i].FileName2})"></div></div>`;
+				}
+
+				documentData +=`
+													</div>
+											</div>
+										</div>
+                    <div class='col-md-3'>
+                        <div class="form-group form-group-default">
+                            <label>Document No</label>
+                            <input type="text" class="form-control" name="CompanyDocuments[${i}].DocumentNumber" value="${data[i].DocumentNumber}"/>
+                        </div>
+                    </div>
+                    <div class='col-md-3'>
+                        <div class="form-group form-group-default">
+                            <label>Expires On</label>
+                            <input type="date" min="@ViewData["Today"]" class="form-control" name="CompanyDocuments[${i}].ExpiresOn" ${expireson}/>
+                        </div>
+                    </div>`;
+            }
+
+            $("#divCompanyDocuments").html(documentData);
+        }
+
+
+        //#endregion
+
+        addMaterialItem = function (tableId) {
+            addTableRow(tableId, 'Meterials', gridMaterials);
+            $("#Description").focus();
+        };
+
+        addPassengerItem = function (tableId) {
+            addTableRow(tableId, 'Passengers', gridPassengers);
+            $("#PassengerEmployeeID").focus();
+        };
+
+		removeMateriaMedia = function (divId, meterialMediaID) {
+            GetAPI(`/api/request/remove-material-media/${meterialMediaID}`, 'materiaMediaRemoved', divId);
+        }
+
+		materiaMediaRemoved = function (data, divId) {
+            if(data==true)
+             $("#"+divId).remove();
+        }
+    });
+
+</script>
+

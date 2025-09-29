@@ -1,0 +1,139 @@
+﻿@page "/import-items"
+@model Louvre.Pages.Product.ImportItemsModel
+@{
+	ViewData["Title"] = "Import Items";
+	ViewData["ParentMenu"] = "Item";
+	ViewData["PageURL"] = "import-items";
+	ViewData["ItemPageURL"] = "";
+	ViewData["ItemIDFieldName"] = "";
+	ViewData["HideNewButton"] = true;
+}
+
+<form id="formSearch" method="post">
+	<div class="main-panel">
+		<div class="content">
+			<div class="page-inner">
+				<partial name="_BreadCrumb" />
+				<div class="row">
+					<div class="col-md-12">
+						<div class="card">
+
+							<div class="card-header">
+								<div class="d-flex align-items-center">
+									<h4 class="card-title">@ViewData["Title"]</h4>
+									
+										<button type="button" class="btn btn-primary btn-round ml-auto"  id="btnSave">
+											<i class="fa fa-plus"></i>
+											Import New Items
+										</button>
+									
+								</div>
+							</div>
+							<div class="card-body">
+								<div class="table-responsive">
+									<div id="add-row_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4">
+										<div class="row">
+											<div class="col-sm-12 col-md-6" id="divEntriesCount">
+
+											</div>
+											<div class="col-sm-12 col-md-6">
+												<div class="input-group">
+													<label class="d-inline-block mt-2 mr-3">Search:</label>
+													<select name="SearchData.SearchColumnName" id="cmbSearchBy" class="form-control"></select>
+													<input type="text" onblur="searchData();" name="SearchData.SearchString" class="form-control form-control-sm" placeholder="" aria-controls="add-row">
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-12 overflow-table">
+												<table id="gridSearchResult" class="display table table-striped table-hover dataTable" role="grid" aria-describedby="add-row_info">
+													<thead>
+													</thead>
+													<tbody>
+													</tbody>
+												</table>
+											</div>
+										</div>
+										<partial name="_Pagination" />
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</form>
+
+
+<script>
+
+    var searchGridColumns = [];
+    $(function () {
+
+        $(document).ready(function () {
+            searchGridColumns = @Html.Raw(Json.Serialize(ViewData["GridColumns"]));
+
+            var cmb = $("#cmbSearchBy");
+		    cmb.empty();
+            $.each(searchGridColumns, function () {
+                if (this["HaveSearchOption"]) {
+                    cmb.append($("<option/>").val(this["ColumnName"]).html(this["DisplayName"]));
+                }
+			});
+
+            loadSearchResultHeader();
+
+            loadPaginationResult(entryCount, 1);
+        });
+
+        loadSearchResultHeader = function () {
+            var headerString = `<tr role="row">`;
+            $.each(searchGridColumns, function () {
+				headerString+=`<th class="sorting" onclick="changeOrderBy(this, '${this.ColumnName}');" style="min-width:${this.Width}">${this.DisplayName}</th>`;
+            });
+            headerString+=`</tr>`;
+
+            $("#gridSearchResult thead").append(headerString);
+        }
+
+        loadSearchResult = function (data) {
+            var oddEven = "odd";
+            var i = 0;
+            var gridRows = "";
+
+            $("#gridSearchResult tbody").empty();
+            $.each(data.Data, function () {
+                var entry = this;
+                i++;
+                if (i % 2 == 0)
+                    oddEven = "even";
+                else
+                    oddEven = "odd";
+
+                gridRows += `<tr role="row" class="${oddEven}">`;
+                $.each(searchGridColumns, function () {
+                    gridRows += ` <td>${entry[this.ColumnName]}</td>`;
+                });
+
+                gridRows += `</tr>`;
+            });
+            $("#gridSearchResult tbody").append(gridRows);
+
+            setPaginationLink(data.PageIndex, data.TotalPages, data.PageSize, data.TotalCount);
+        };
+	});
+
+
+
+	 $('#btnSave').click(function (evt) {
+		 PostForm(evt, '/@ViewData["PageURL"]?handler=save', '#formSearch', "saved");
+        });
+
+        saved = function (data) {
+            successMessage(data.ResponseMessage, data.ResponseTitle,'@ViewData["MasterPageURL"]');
+        }
+
+
+</script>

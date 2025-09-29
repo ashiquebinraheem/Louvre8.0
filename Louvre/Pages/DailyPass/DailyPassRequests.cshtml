@@ -1,0 +1,11 @@
+﻿@page "/daily-pass-requests"
+@model Louvre.Pages.DailyPassRequestsModel
+@{
+	ViewData["Title"] = "All Requests";
+	ViewData["ParentMenu"] = "Scheduled Pass Request";
+	ViewData["PageURL"] = "daily-pass-requests";
+	ViewData["ItemPageURL"] = "daily-pass-request";
+	ViewData["ItemIDFieldName"] = "DailyPassRequestID";
+}
+
+<partial name="_PaginationGrid"/>

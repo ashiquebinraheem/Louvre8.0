@@ -1,0 +1,11 @@
+﻿@page "/requests"
+@model Louvre.Pages.RequestsModel
+@{
+	ViewData["Title"] = "All Requests";
+	ViewData["ParentMenu"] = "Material Entry";
+	ViewData["PageURL"] = "requests";
+	ViewData["ItemPageURL"] = "material-entry-request";
+	ViewData["ItemIDFieldName"] = "RequestID";
+}
+
+<partial name="_PaginationGrid"/>

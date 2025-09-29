@@ -1,0 +1,10 @@
+﻿@page "/vehicles"
+@model Louvre.Pages.VehiclesModel
+@{
+    ViewData["Title"] = "Vehicles";
+    ViewData["PageURL"] = "vehicles";
+    ViewData["ItemPageURL"] = "vehicle";
+    ViewData["ItemIDFieldName"] = "VehicleID";
+}
+
+<partial name="_PaginationGrid"/>

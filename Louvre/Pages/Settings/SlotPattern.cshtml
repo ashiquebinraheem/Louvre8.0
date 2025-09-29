@@ -1,0 +1,119 @@
+﻿@page "/slot-pattern/{id?}"
+@model Louvre.Pages.SlotPatternModel
+@{
+    ViewData["Title"] = "Slot Pattern";
+    ViewData["ParentMenu"] = "Settings";
+    ViewData["PageURL"] = "slot-pattern";
+    ViewData["MasterPageURL"] = "slot-patterns";
+}
+
+<div class="main-panel">
+    <div class="content">
+        <div class="page-inner">
+            <partial name="_BreadCrumb" />
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card card-with-nav">
+                        <div class="card-header">
+                            <div class="row row-nav-line">
+                                <ul class="nav nav-tabs nav-line nav-color-secondary" role="tablist">
+                                    <li class="nav-item"> <a class="nav-link" role="tab" aria-selected="true">@ViewData["Title"] Details</a> </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <form method="post" id="formBasic" enctype="multipart/form-data">
+                                <input type="hidden" asp-for="Data.SlotPatternID" />
+                                <div class="row mt-3">
+                                    <div class="col-md-12">
+                                        <div class="form-group form-group-default">
+                                            <label>Name</label>
+                                            <input type="text" class="form-control" asp-for="Data.SlotPatternName" autofocus>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 overflow-table">
+                                        <table id="gridFields" class="table table-bordered table-head-bg-info table-bordered-bd-info mt-4" role="grid" aria-describedby="add-row_info">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width:70px">Day No</th>
+                                                    <th>Slot Group</th>
+                                                    <th style="width:10px"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @for (int i = 0,j=1; i < Model.Items.Count(); i++,j++)
+                                                {
+                                                    <tr>
+                                                        <td class="text-center">
+                                                            <input type="hidden" asp-for="Items[i].SlotPatternItemID" />
+                                                            <label name="Items[@i].RowSlNo">@j</label>
+                                                        </td>
+                                                        <td>
+                                                            <select class="form-control" asp-for="Items[i].SlotGroupID" asp-items="ViewBag.SlotGroups"><option>--No Slots--</option></select>
+                                                        </td>
+                                                        <td style="width:10px" >
+                                                            <a onclick="removeTableRow(this,$(this).closest('table').attr('id'))"><span class="fa fa-trash"></span></a>
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <td>
+                                                       
+                                                    </td>
+                                                    <td>
+                                                        <select class="form-control" id="SlotGroupID" asp-items="ViewBag.SlotGroups">
+                                                            <option>--No Slots--</option>
+                                                        </select>
+                                                    </td>
+                                                    <td style="width:10px">
+                                                        <a class="" onclick="addItem($(this).closest('table').attr('id'));"><i class="fa fa-plus-circle"></i></a>
+                                                    </td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="text-right mt-3 mb-3">
+                                    <partial name="_SaveButton" />
+                                    <partial name="_DeleteButton" />
+                                </div>
+                                <partial name="_ErrorPartial" />
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+
+    var gridFields = [
+        {
+            FieldType: "slno"
+        },
+        {
+            FieldType: "select",
+            FieldName: "SlotGroupID",
+            ControlName: "SlotGroupID",
+        },
+        {
+            FieldType: "hidden",
+            FieldName: "SlotPatternItemID",
+        },
+    ];
+
+    $(function () {
+
+        addItem = function (tableId) {
+            addTableRow(tableId, 'Items', gridFields);
+            $("#DayNo").focus();
+        };
+    });
+
+</script>

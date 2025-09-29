@@ -1,0 +1,139 @@
+﻿@page "/user/{id?}"
+@model Louvre.Pages.UserModel
+@{
+    ViewData["Title"] = "User";
+    ViewData["ParentMenu"] = "Account";
+    ViewData["PageURL"] = "user";
+    ViewData["MasterPageURL"] = "users";
+}
+
+<div class="main-panel">
+    <div class="content">
+        <div class="page-inner">
+            <partial name="_BreadCrumb" />
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="card card-with-nav">
+                        <div class="card-header">
+                            <div class="row row-nav-line">
+                                <ul class="nav nav-tabs nav-line nav-color-secondary" role="tablist">
+                                    <li class="nav-item"> <a class="nav-link" role="tab" aria-selected="true">@ViewData["Title"] Details</a> </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <form method="post" id="formBasic" enctype="multipart/form-data">
+                                <input type="hidden" asp-for="Data.UserID" />
+                                <input type="hidden" asp-for="PersonalInfo.PersonalInfoID" />
+                                <div class="row ">
+                                    <div class="col-md-6">
+                                        <div class="form-group form-group-default">
+                                            <label>Name</label>
+                                            <input type="text" class="form-control" asp-for="PersonalInfo.FirstName" autofocus>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group form-group-default">
+                                            <label>Login ID</label>
+                                            <input type="text" class="form-control" asp-for="Data.UserName" readonly onfocus="this.removeAttribute('readonly');">
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-md-6">
+                                        <div class="form-group form-group-default">
+                                            <label>User Type</label>
+                                            <select class="form-control" asp-for="Data.UserTypeID" asp-items="ViewBag.UserTypes">
+                                                <option></option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    @*<div class="col-md-6">
+                                        <div class="form-group form-group-default">
+                                            <label>Branch</label>
+                                            <select class="form-control" asp-for="Data.BranchID" asp-items="ViewBag.Branches">
+                                                <option></option>
+                                            </select>
+                                        </div>
+                                    </div>*@
+
+                                    <div class="col-md-6">
+                                        <div class="form-group form-group-default">
+                                            <label>Email</label>
+                                            <input type="email" class="form-control" asp-for="PersonalInfo.Email1" readonly onfocus="this.removeAttribute('readonly');">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row ">
+                                    <div class="col-md-4">
+                                        <div class="form-group form-group-default">
+                                            <label>Password</label>
+                                            @if (Model.Data == null)
+                                            {
+                                                <input type="password" class="form-control" asp-for="Data.Password" required autocomplete="new-password">
+                                            }
+                                            else
+                                            {
+                                                <input type="password" class="form-control" asp-for="NewPassword" autocomplete="new-password">
+                                                <input type="hidden" asp-for="Data.Password">
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group form-group-default">
+                                            <label>Phone 1</label>
+                                            <input type="text" class="form-control" asp-for="PersonalInfo.Phone1">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group form-group-default">
+                                            <label>Phone 2</label>
+                                            <input type="text" class="form-control" asp-for="PersonalInfo.Phone2">
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row ">
+                                    <div class='col-md-4'>
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox" asp-for="Data.LoginStatus">
+                                                <span class="form-check-sign">Can Login</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class='col-md-2'></div>
+                                    <div class='col-md-6'>
+                                        <div class="form-group form-group-default">
+                                            <div class="file-upload">
+                                                <div class="switch"><i class="fa fa-cloud"></i> Upload Profile Photo</div>
+                                                <input type="hidden" asp-for="Media.MediaID" />
+                                                <div class="row">
+                                                    <div class="col-xs-10">
+                                                        <input class="form-control file-input" type="file" accept="image/x-png,image/gif,image/jpeg,application/pdf"  asp-for="Media.MediaFile" onchange="showImage(this,'img_here')">
+                                                    </div>
+                                                    <div class="col-xs-2">
+                                                        <div class="photo-box shadow" id="img_here" onclick="showImageInPopup(this)" data-toggle="modal" data-target="#photViewer" style="background:#eee no-repeat center center;background-image:url(@Model.Media.FileName)"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-right  mb-3">
+                                    <partial name="_SaveButton" />
+                                    <button type="reset" class="btn btn-danger">Reset</button>
+                                </div>
+                                <partial name="_ErrorPartial" />
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

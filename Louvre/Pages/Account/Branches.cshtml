@@ -1,0 +1,10 @@
+﻿@page "/branches"
+@model Louvre.Pages.BranchesModel
+@{
+    ViewData["Title"] = "Branches";
+    ViewData["PageURL"] = "branches";
+    ViewData["ItemPageURL"] = "branch";
+    ViewData["ItemIDFieldName"] = "BranchID";
+}
+
+<partial name="_PaginationGrid"/>

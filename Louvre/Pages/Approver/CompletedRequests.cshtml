@@ -1,0 +1,12 @@
+﻿@page "/completed-requests"
+@model Louvre.Pages.CompletedRequestsModel
+@{
+    ViewData["Title"] = "Completed Requests";
+    ViewData["ParentMenu"] = "Request";
+    ViewData["PageURL"] = "completed-requests";
+    ViewData["ItemPageURL"] = "view-request";
+    ViewData["ItemIDFieldName"] = "RequestID";
+    ViewData["HideNewButton"] = true;
+}
+
+<partial name="_PaginationGrid"/>

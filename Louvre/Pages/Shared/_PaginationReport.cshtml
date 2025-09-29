@@ -1,0 +1,124 @@
+﻿
+
+
+    <div class="row">
+        <div class="col-sm-12 col-md-3" id="divEntriesCount">
+        </div>
+        <div class="col-sm-12 col-md-6">
+            <div class="input-group">
+                <label class="d-inline-block mt-2 mr-3">Search:</label>
+                <select name="SearchData.SearchColumnName" id="cmbSearchBy" class="form-control"></select>
+                <input type="text" name="SearchData.SearchString" class="form-control form-control-sm" placeholder="" aria-controls="add-row">
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-3">
+            <button type="button" class="btn btn-warning btn-round ml-auto float-right" onclick="reportExport('csv');">
+                <i class="fa fa-file-export"></i>
+                Export
+            </button>
+
+            <button type="button" class="btn btn-success btn-round ml-auto float-right" onclick="searchData();">
+                <i class="fa fa-search"></i>
+                Search
+            </button>
+
+        </div>
+    </div>
+<div class="row">
+    <div class="col-sm-12 overflow-table">
+        <table id="gridSearchResult" class="display table table-striped table-hover dataTable" role="grid" aria-describedby="add-row_info">
+            <thead>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>
+<partial name="_Pagination" />
+
+
+
+<script>
+
+    var searchGridColumns = [];
+    $(function () {
+
+        $(document).ready(function () {
+            searchGridColumns = @Html.Raw(Json.Serialize(ViewData["GridColumns"]));
+
+            var cmb = $("#cmbSearchBy");
+		    cmb.empty();
+            $.each(searchGridColumns, function () {
+                if (!this["HaveSearchOption"]) {
+                    cmb.append($("<option/>").val(this["ColumnName"]).html(this["DisplayName"]));
+                }
+			});
+
+            loadSearchResultHeader();
+        });
+
+        loadSearchResultHeader = function () {
+            var headerString = `<tr role="row">`;
+            $.each(searchGridColumns, function () {
+				headerString+=`<th class="sorting" onclick="changeOrderBy(this, '${this.ColumnName}');" style="min-width:${this.Width}">${this.DisplayName}</th>`;
+            });
+            headerString+=`</tr>`;
+
+            $("#gridSearchResult thead").append(headerString);
+        }
+
+        loadSearchResult = function (data) {
+            var oddEven = "odd";
+            var i = 0;
+            var gridRows = "";
+
+            $("#gridSearchResult tbody").empty();
+            $.each(data.Data, function () {
+                var entry = this;
+                i++;
+                if (i % 2 == 0)
+                    oddEven = "even";
+                else
+                    oddEven = "odd";
+
+                gridRows += `<tr role="row" class="${oddEven}">`;
+                $.each(searchGridColumns, function () {
+                    gridRows += ` <td>${entry[this.ColumnName]}</td>`;
+                });
+                gridRows += `</tr>`;
+            });
+            $("#gridSearchResult tbody").append(gridRows);
+
+            setPaginationLink(data.PageIndex, data.TotalPages, data.PageSize, data.TotalCount);
+        };
+
+        reportExport = function (type) {
+            gvReportExportType = type;
+            PostFormWithoutEvent('/@ViewData["PageURL"]?handler=ExportReport', '#formSearch', "loadExportReport");
+        };
+
+        loadExportReport = function (data) {
+
+            exportGridColumns = @Html.Raw(Json.Serialize(ViewData["GridColumns"]));
+            var divExportReport = `<table id="tblExportItems">
+		    <thead>
+			    <tr>`;
+            $.each(exportGridColumns, function () {
+		        divExportReport+=`<th>${this.DisplayName}</th>`;
+            });
+            divExportReport+=`</tr></thead><tbody>`;
+
+            $.each(data, function () {
+                var entry = this;
+                divExportReport+=`<tr>`;
+                $.each(exportGridColumns, function () {
+                    divExportReport += ` <td>${entry[this.ColumnName]}</td>`;
+                });
+                divExportReport+=`</tr>`;
+            });
+            divExportReport+=`</tbody></table>`;
+            exportReport(divExportReport, '@ViewData["Title"]');
+        }
+    });
+
+</script>

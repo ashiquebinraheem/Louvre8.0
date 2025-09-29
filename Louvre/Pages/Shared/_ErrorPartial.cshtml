@@ -1,0 +1,34 @@
+﻿
+<div class="row">
+    <div class="col-md-12">
+        <div asp-validation-summary="All" class="text-danger" style="margin:10px 0px 10px 0px;"></div>
+    </div>
+</div>
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="col-md-12">
+        <div class="alert alert-danger" style="border-radius: 5px;">
+            @TempData["ErrorMessage"]
+        </div>
+        <div style="display:none">
+            @TempData["ErrorDescription"]
+        </div>
+
+    </div>
+}
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="col-md-12">
+        <div class="alert alert-success" style="border-radius: 5px;">
+            @TempData["SuccessMessage"]
+        </div>
+    </div>
+}
+
+<div class="col-md-12">
+    <div id="div_message" style="display: none;margin-top:15px" class="message-div">
+        <div id="msg" class="msg-text"></div>
+    </div>
+</div>

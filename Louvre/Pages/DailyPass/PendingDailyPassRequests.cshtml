@@ -1,0 +1,12 @@
+﻿@page "/pending-daily-pass-requests"
+@model Louvre.Pages.PendingDailyPassRequestsModel
+@{
+	ViewData["Title"] = "Pending Scheduled Pass Requests";
+	ViewData["ParentMenu"] = "Scheduled Pass Request";
+	ViewData["PageURL"] = "pending-daily-pass-requests";
+	ViewData["ItemPageURL"] = "view-daily-pass-request";
+	ViewData["ItemIDFieldName"] = "DailyPassRequestID";
+	ViewData["HideNewButton"] = true;
+}
+
+<partial name="_PaginationGrid"/>

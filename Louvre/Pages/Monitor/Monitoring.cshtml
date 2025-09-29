@@ -1,0 +1,527 @@
+﻿@page "/monitoring"
+@model Louvre.Pages.MonitoringModel
+@{
+    ViewData["Title"] = "Monitor";
+    ViewData["ParentMenu"] = "Request";
+    ViewData["PageURL"] = "monitoring";
+    ViewData["MasterPageURL"] = "monitoring";
+}
+
+<div class="main-panel">
+    <div class="content">
+        <div class="page-inner">
+            <partial name="_BreadCrumb" />
+            <div class="row">
+
+                <form method="post" id="formBasic" enctype="multipart/form-data" class="col-md-12">
+                    <div class="card card-with-nav">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <div class="input-group ">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" id="basic-addon1">Date</span>
+                                            </div>
+                                            <input type="date" class="form-control" asp-for="Date" aria-label="Date" aria-describedby="basic-addon1">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <div class="input-group ">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" id="basic-addon2">Barcode</span>
+                                            </div>
+                                            <input type="text" class="form-control" asp-for="QRCode" aria-label="Barcode" aria-describedby="basic-addon2">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <button type="submit" asp-page-handler="search" id="btnSearch" class="btn btn-primary">Search</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                @for (var i = 0; i < Model.Vehicles.Count; i++)
+                {
+                    <div class="card col-md-12">
+                        <div class="card-header">
+                            <h4 class="card-title" style="float:left">Barcode : @Model.Vehicles[i].QRCode</h4>
+                            <div class="text-right">
+								<form method="post" id="formAction">
+									<input type="hidden" name="Date" value="@Model.Date" />
+									<input type="hidden" name="RequestVehicleID" value="@Model.Vehicles[i].RequestVehicleID" />
+									<input type="hidden" asp-for="RequestID" value="@Model.Vehicles[i].RequestID"/>
+									@if (Model.Vehicles[i].NeedCheckin)
+									{
+										<button type="button" onclick="showReject(@Model.Vehicles[i].RequestID)" class="btn btn-danger">Report</button>
+										<button type="submit" asp-page-handler="checkin" id="btnCheckin" class="btn btn-primary">Checkin</button>
+									}
+									@if (Model.Vehicles[i].NeedCheckout)
+									{
+										<button type="submit" asp-page-handler="checkout" id="btnCheckOut" class="btn btn-primary">Checkout</button>
+									}
+									@if (Model.Vehicles[i].NeedLoadingBayVerify)
+									{
+										<button type="submit" asp-page-handler="LoadingBayVerify" id="btnVerify" class="btn btn-primary">Verify</button>
+									}
+								</form>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <ul class="nav nav-pills nav-secondary" id="pills-tab_@i" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="pills-home-tab_@i" data-toggle="pill" href="#pills-home_@i" role="tab" aria-controls="pills-home" aria-selected="true">Slot &amp; Vehicle Details</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="pills-profile-tab_@i" data-toggle="pill" href="#pills-profile_@i" role="tab" aria-controls="pills-profile" aria-selected="false">Meterials</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="pills-contact-tab_@i" data-toggle="pill" href="#pills-contact_@i" role="tab" aria-controls="pills-contact" aria-selected="false">Passengers</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content mt-2 mb-3" id="pills-tabContent_@i">
+                                <div class="tab-pane fade show active" id="pills-home_@i" role="tabpanel" aria-labelledby="pills-home-tab">
+                                    <div class="row">
+                                        <div class="col-md-4 mt-3">
+                                            <div class="input-group ">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text" id="basic-addon3">Slot</span>
+                                                </div>
+                                                <input type="text" class="form-control" asp-for="@Model.Vehicles[i].Slot" aria-label="Slot" aria-describedby="basic-addon3">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mt-3">
+                                            <div class="input-group ">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text" id="basic-addon4">Location</span>
+                                                </div>
+                                                <input type="text" class="form-control" asp-for="@Model.Vehicles[i].LocationName" aria-label="LocationName" aria-describedby="basic-addon4">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mt-3">
+                                            <div class="input-group ">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text" id="basic-addon2">Driver</span>
+                                                </div>
+                                                <input type="text" class="form-control" asp-for="@Model.Vehicles[i].EmployeeName" aria-label="Barcode" aria-describedby="basic-addon2">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mt-3">
+                                            <div class="input-group ">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text" id="basic-addon2">Company</span>
+                                                </div>
+                                                <input type="text" class="form-control" asp-for="@Model.Vehicles[i].CompanyName" aria-label="Barcode" aria-describedby="basic-addon2">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mt-3">
+                                            <div class="input-group ">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text" id="basic-addon2">Designation</span>
+                                                </div>
+                                                <input type="text" class="form-control" asp-for="@Model.Vehicles[i].DesignationName" aria-label="Barcode" aria-describedby="basic-addon2">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mt-3">
+                                            <div class="input-group ">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text" id="basic-addon2">Phone Number</span>
+                                                </div>
+                                                <input type="text" class="form-control" asp-for="@Model.Vehicles[i].ContactNumber" aria-label="Barcode" aria-describedby="basic-addon2">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mt-3">
+                                            <div class="input-group ">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text" id="basic-addon2">Register No</span>
+                                                </div>
+                                                <input type="text" class="form-control" asp-for="@Model.Vehicles[i].RegisterNo" aria-label="Barcode" aria-describedby="basic-addon2">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mt-3">
+                                            <div class="input-group ">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text" id="basic-addon2">Plate No</span>
+                                                </div>
+                                                <input type="text" class="form-control" asp-for="@Model.Vehicles[i].PlateNo" aria-label="Barcode" aria-describedby="basic-addon2">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mt-3">
+                                            <div class="input-group ">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text" id="basic-addon2">Vehicle Size</span>
+                                                </div>
+                                                <input type="text" class="form-control" asp-for="@Model.Vehicles[i].VehicleSize" aria-label="Barcode" aria-describedby="basic-addon2">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mt-3">
+                                            <div class="input-group ">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text" id="basic-addon2">Vehicle Type</span>
+                                                </div>
+                                                <input type="text" class="form-control" asp-for="@Model.Vehicles[i].VehicleTypeName" aria-label="Barcode" aria-describedby="basic-addon2">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mt-3">
+                                            <div class="input-group ">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text" id="basic-addon2">No of Passengers</span>
+                                                </div>
+                                                <input type="text" class="form-control" asp-for="@Model.Vehicles[i].PassengerCount" aria-label="Barcode" aria-describedby="basic-addon2">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="pills-profile_@i" role="tabpanel" aria-labelledby="pills-profile-tab">
+                                    <div class="row">
+                                        <div class="col-md-12 overflow-table">
+                                            <table class="table table-bordered table-head-bg-info table-bordered-bd-info" role="grid" aria-describedby="add-row_info">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Description</th>
+                                                        <th width="20%">Quantity</th>
+                                                        <th width="20%">Unit</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var item in @Model.Vehicles[i].Meterials)
+                                                    {
+                                                        <tr>
+                                                            <td>
+                                                                @item.Description
+                                                            </td>
+                                                            <td>
+                                                                @item.Quantity
+                                                            </td>
+                                                            <td>
+                                                                @item.PackingTypeName
+                                                            </td>
+
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="pills-contact_@i" role="tabpanel" aria-labelledby="pills-contact-tab">
+                                    <div class="row">
+                                        <div class="col-md-12 overflow-table">
+                                            <table id="gridPassengers" class="table table-bordered table-head-bg-info table-bordered-bd-info" role="grid" aria-describedby="add-row_info">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Co Passenger</th>
+                                                        <th>Designation</th>
+                                                        <th>Company</th>
+                                                        <th>Mobile No</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var item in @Model.Vehicles[i].Passengers)
+                                                    {
+                                                        <tr>
+                                                            <td>
+                                                                @item.EmployeeName
+                                                            </td>
+                                                            <td>
+                                                                @item.DesignationName
+                                                            </td>
+                                                            <td>
+                                                                @item.CompanyName
+                                                            </td>
+                                                            <td>
+                                                                @item.ContactNumber
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                @for (var i = 0; i < Model.DailyPassVehicles.Count; i++)
+                {
+                    <div class="card col-md-12">
+                        <div class="card-header">
+                            <h4 class="card-title" style="float:left">Barcode : @Model.DailyPassVehicles[i].QRCode</h4>
+                            <div class="text-right">
+									@if (Model.DailyPassVehicles[i].NeedCheckin)
+									{
+										<button type="button" onclick="dailyPassCheckin(@Model.DailyPassVehicles[i].DailyPassRequestID)" class="btn btn-primary">Checkin</button>
+									}
+									@if (Model.DailyPassVehicles[i].NeedCheckout)
+									{
+										<button type="button" onclick="dailyPassCheckout(@Model.DailyPassVehicles[i].DailyPassRequestID)" class="btn btn-primary">Checkout</button>
+									}
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <ul class="nav nav-pills nav-secondary" id="pills-tab_d_@i" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="pills-home-tab_d_@i" data-toggle="pill" href="#pills-home_d_@i" role="tab" aria-controls="pills-home_d" aria-selected="true">Slot &amp; Vehicle Details</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="pills-profile-tab_d_@i" data-toggle="pill" href="#pills-profile_d_@i" role="tab" aria-controls="pills-profile_d" aria-selected="false">Meterials</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="pills-contact-tab_d_@i" data-toggle="pill" href="#pills-contact_d_@i" role="tab" aria-controls="pills-contact_d" aria-selected="false">Passengers</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content mt-2 mb-3" id="pills-tabContent_d_@i">
+                                <div class="tab-pane fade show active" id="pills-home_d_@i" role="tabpanel" aria-labelledby="pills-home-tab_d">
+                                    <div class="row">
+                                        <div class="col-md-4 mt-3">
+                                            <div class="input-group ">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text" id="basic-addon3">From Date</span>
+                                                </div>
+                                                <input type="text" class="form-control" asp-for="@Model.DailyPassVehicles[i].FromDate" aria-describedby="basic-addon3">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4 mt-3">
+                                            <div class="input-group ">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text" id="basic-addon3">To Date</span>
+                                                </div>
+                                                <input type="text" class="form-control" asp-for="@Model.DailyPassVehicles[i].ToDate"  aria-describedby="basic-addon3">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4 mt-3">
+                                            <div class="input-group ">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text" id="basic-addon4">Location</span>
+                                                </div>
+                                                <input type="text" class="form-control" asp-for="@Model.DailyPassVehicles[i].LocationName" aria-label="LocationName" aria-describedby="basic-addon4">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mt-3">
+                                            <div class="input-group ">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text" id="basic-addon2">Driver</span>
+                                                </div>
+                                                <input type="text" class="form-control" asp-for="@Model.DailyPassVehicles[i].EmployeeName" aria-label="Barcode" aria-describedby="basic-addon2">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mt-3">
+                                            <div class="input-group ">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text" id="basic-addon2">Company</span>
+                                                </div>
+                                                <input type="text" class="form-control" asp-for="@Model.DailyPassVehicles[i].CompanyName" aria-label="Barcode" aria-describedby="basic-addon2">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mt-3">
+                                            <div class="input-group ">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text" id="basic-addon2">Designation</span>
+                                                </div>
+                                                <input type="text" class="form-control" asp-for="@Model.DailyPassVehicles[i].DesignationName" aria-label="Barcode" aria-describedby="basic-addon2">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mt-3">
+                                            <div class="input-group ">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text" id="basic-addon2">Phone Number</span>
+                                                </div>
+                                                <input type="text" class="form-control" asp-for="@Model.DailyPassVehicles[i].ContactNumber" aria-label="Barcode" aria-describedby="basic-addon2">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mt-3">
+                                            <div class="input-group ">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text" id="basic-addon2">Register No</span>
+                                                </div>
+                                                <input type="text" class="form-control" asp-for="@Model.DailyPassVehicles[i].RegisterNo" aria-label="Barcode" aria-describedby="basic-addon2">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mt-3">
+                                            <div class="input-group ">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text" id="basic-addon2">Plate No</span>
+                                                </div>
+                                                <input type="text" class="form-control" asp-for="@Model.DailyPassVehicles[i].PlateNo" aria-label="Barcode" aria-describedby="basic-addon2">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mt-3">
+                                            <div class="input-group ">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text" id="basic-addon2">Vehicle Size</span>
+                                                </div>
+                                                <input type="text" class="form-control" asp-for="@Model.DailyPassVehicles[i].VehicleSize" aria-label="Barcode" aria-describedby="basic-addon2">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mt-3">
+                                            <div class="input-group ">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text" id="basic-addon2">Vehicle Type</span>
+                                                </div>
+                                                <input type="text" class="form-control" asp-for="@Model.DailyPassVehicles[i].VehicleTypeName" aria-label="Barcode" aria-describedby="basic-addon2">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mt-3">
+                                            <div class="input-group ">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text" id="basic-addon2">No of Passengers</span>
+                                                </div>
+                                                <input type="text" class="form-control" asp-for="@Model.DailyPassVehicles[i].PassengerCount" aria-label="Barcode" aria-describedby="basic-addon2">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="pills-profile_d_@i" role="tabpanel" aria-labelledby="pills-profile-tab_d">
+                                    <div class="row">
+                                        <div class="col-md-12 overflow-table">
+                                            <table class="table table-bordered table-head-bg-info table-bordered-bd-info" role="grid" aria-describedby="add-row_info">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Description</th>
+                                                        <th width="20%">Quantity</th>
+                                                        <th width="20%">Unit</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var item in @Model.DailyPassVehicles[i].Meterials)
+                                                    {
+                                                        <tr>
+                                                            <td>
+                                                                @item.Description
+                                                            </td>
+                                                            <td>
+                                                                @item.Quantity
+                                                            </td>
+                                                            <td>
+                                                                @item.PackingTypeName
+                                                            </td>
+
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="pills-contact_d_@i" role="tabpanel" aria-labelledby="pills-contact-tab_d">
+                                    <div class="row">
+                                        <div class="col-md-12 overflow-table">
+                                            <table id="gridPassengers" class="table table-bordered table-head-bg-info table-bordered-bd-info" role="grid" aria-describedby="add-row_info">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Co Passenger</th>
+                                                        <th>Designation</th>
+                                                        <th>Company</th>
+                                                        <th>Mobile No</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var item in @Model.DailyPassVehicles[i].Passengers)
+                                                    {
+                                                        <tr>
+                                                            <td>
+                                                                @item.EmployeeName
+                                                            </td>
+                                                            <td>
+                                                                @item.DesignationName
+                                                            </td>
+                                                            <td>
+                                                                @item.CompanyName
+                                                            </td>
+                                                            <td>
+                                                                @item.ContactNumber
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="rejectPopup" tabindex="-1" role="dialog" aria-labelledby="newRejectPopupLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <form method="post" id="formReject">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Do you want to Reject the application?</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group form-group-default">
+                                <label>Reason</label>
+                                <input type="hidden" asp-for="@Model.Date" />
+                                <input type="hidden" asp-for="RequestID" id="RejectRequestID"/>
+                                <textarea class="form-control" asp-for="Remarks"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <input type="submit" asp-page-handler="forward"   id="btnReject" value="Confirm Report" class="btn btn-success" />
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<script>
+
+
+    $(function () {
+
+        $('#btnSave').click(function (evt) {
+            PostForm(evt, '/@ViewData["PageURL"]?handler=save', '#formBasic', "saved");
+        });
+        saved = function (data) {
+            successMessage(data.ResponseMessage, data.ResponseTitle, '@ViewData["MasterPageURL"]');
+        }
+
+        showReject=function(requestId)
+        {
+            $("#RejectRequestID").val(requestId);
+            $("#rejectPopup").modal('show');
+        };
+
+        dailyPassCheckin=function(requestId)
+        {
+             GetAPI(`/api/request/daily-request-checkin/${requestId}`, 'dailyPassCheckedIn');
+        }
+
+        dailyPassCheckout=function(requestId)
+        {
+             GetAPI(`/api/request/daily-request-checkout/${requestId}`, 'dailyPassCheckedIn');
+        }
+
+        dailyPassCheckedIn=function(data)
+        {
+            if(data==true)
+             location.reload();
+        }
+
+    });
+
+</script>

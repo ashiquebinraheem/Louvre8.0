@@ -1,0 +1,11 @@
+﻿@page "/employees"
+@model Louvre.Pages.EmployeesModel
+@{
+    ViewData["Title"] = "Employees";
+    ViewData["PageURL"] = "employees";
+    ViewData["ItemPageURL"] = "employee";
+    ViewData["ItemIDFieldName"] = "UserID";
+    ViewData["ParentMenu"] = "Account";
+}
+
+<partial name="_PaginationGrid"/>

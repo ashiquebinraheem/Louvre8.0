@@ -1,0 +1,12 @@
+﻿@page "/slots"
+@model Louvre.Pages.SlotsModel
+@{
+    ViewData["Title"] = "Slots";
+    ViewData["PageURL"] = "slots";
+    ViewData["ItemPageURL"] = "slot";
+    ViewData["ItemIDFieldName"] = "SlotMasterID";
+    ViewData["HideNewButton"] = true;
+    ViewData["ParentMenu"] = "Master";
+}
+
+<partial name="_PaginationGrid"/>

@@ -1,0 +1,12 @@
+﻿@page "/rejected-exit-requests"
+@model Louvre.Pages.RejectedExitRequestsModel
+@{
+	ViewData["Title"] = "Rejected Requests";
+	ViewData["ParentMenu"] = "Material Exit";
+	ViewData["PageURL"] = "rejected-exit-requests";
+	ViewData["ItemPageURL"] = "material-entry-request";
+	ViewData["ItemIDFieldName"] = "RequestID";
+	ViewData["HideNewButton"] = true;
+}
+
+<partial name="_PaginationGrid"/>

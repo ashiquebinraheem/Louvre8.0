@@ -1,0 +1,12 @@
+﻿@page "/pending-exit-requests"
+@model Louvre.Pages.PendingExitRequestsModel
+@{
+	ViewData["Title"] = "Pending Requests";
+	ViewData["ParentMenu"] = "Material Exit";
+	ViewData["PageURL"] = "pending-exit-requests";
+	ViewData["ItemPageURL"] = "view-request";
+	ViewData["ItemIDFieldName"] = "RequestID";
+	ViewData["HideNewButton"] = true;
+}
+
+<partial name="_PaginationGrid"/>

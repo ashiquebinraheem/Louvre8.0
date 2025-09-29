@@ -1,0 +1,171 @@
+﻿@page "/vehicle/{id?}"
+@model Louvre.Pages.VehicleModel
+@{
+    ViewData["Title"] = "Vehicle";
+    ViewData["ParentMenu"] = "Settings";
+    ViewData["PageURL"] = "vehicle";
+    ViewData["MasterPageURL"] = "vehicles";
+}
+
+<div class="main-panel">
+    <div class="content">
+        <div class="page-inner">
+            <partial name="_BreadCrumb" />
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="card card-with-nav">
+                        <div class="card-header">
+                            <div class="row row-nav-line">
+                                <ul class="nav nav-tabs nav-line nav-color-secondary" role="tablist">
+                                    <li class="nav-item"> <a class="nav-link" role="tab" aria-selected="true">@ViewData["Title"] Details</a> </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <form method="post" id="formBasic" enctype="multipart/form-data">
+                                <input type="hidden" asp-for="Data.VehicleID" />
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group form-group-default">
+                                            <label>RegisterNo</label>
+                                            <input type="text" class="form-control" asp-for="Data.RegisterNo" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group form-group-default">
+                                            <label>Vehicle Type</label>
+                                            <select class="form-control" asp-for="Data.VehicleTypeID" asp-items="ViewBag.VehicleTypes">
+                                                <option></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group form-group-default">
+                                            <label>Size</label>
+                                            <input type="text" class="form-control" asp-for="Data.VehicleSize" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group form-group-default">
+                                            <label>Plate Number</label>
+                                            <input type="text" class="form-control" asp-for="Data.PlateNo" />
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group form-group-default">
+                                            <label>Make</label>
+                                            <select class="form-control" asp-for="Data.VehicleMakeID" asp-items="ViewBag.VehicleMakes">
+                                                <option></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group form-group-default">
+                                            <label>Plate Source</label>
+                                            <select class="form-control" asp-for="Data.VehiclePlateSourceID" asp-items="ViewBag.VehiclePlateSources">
+                                                <option></option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group form-group-default">
+                                            <label>Plate Category</label>
+                                            <select class="form-control" asp-for="Data.VehiclePlateCategoryID" asp-items="ViewBag.VehiclePlateCategories">
+                                                <option></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group form-group-default">
+                                            <label>Plate Type</label>
+                                            <select class="form-control" asp-for="Data.VehiclePlateTypeID" asp-items="ViewBag.VehiclePlateTypes">
+                                                <option></option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                </div>
+								<div class="row">
+
+									@for (int i = 0; i < Model.Documents.Count; i++)
+									{
+										<input type="hidden" asp-for="@Model.Documents[i].MediaID" />
+										<input type="hidden" asp-for="@Model.Documents[i].MediaID2" />
+										<input type="hidden" asp-for="@Model.Documents[i].DocumentID" />
+										<input type="hidden" asp-for="@Model.Documents[i].DocumentTypeID" />
+										<input type="hidden" id="HasFile_@i" asp-for="@Model.Documents[i].HasFile" />
+										<input type="hidden" id="HasFile2_@i" asp-for="@Model.Documents[i].HasFile2" />
+
+
+										<div class='col-md-6 '>
+											<div class="form-group form-group-default">
+												<div class="row  py-3">
+													<div class="col-4 pl-2 document-label">@Model.Documents[i].DocumentTypeName</div>
+													<div class="col-2 uplod-icon my-auto">
+														<div class="image-upload">
+															<label for="DocumentFiles_@i"><i class="fa fa-file" style="font-size: 13px;">  </i> <span class=" uplod-text">Front</span></label>
+															<input class="file-input" type="file"  accept="image/x-png,image/gif,image/jpeg,application/pdf" id="DocumentFiles_@i" asp-for="DocumentFiles" onchange="showImage(this,'img_'+@i)" />
+														</div>
+													</div>
+													<div class="col-2 uplod-icon my-auto">
+														<div class="image-upload">
+															<label for="DocumentFiles2_@i"><i class="fa fa-file" style="font-size: 13px;"> </i> <span class=" uplod-text">Back</span></label>
+															<input type="file" accept="image/x-png,image/gif,image/jpeg,application/pdf" id="DocumentFiles2_@i" asp-for="DocumentFiles2" onchange="showImage(this,'img2_'+@i)" />
+														</div>
+													</div>
+													<div class="col-2"><div class="uplod-img my-auto photo-box shadow" id="img_@i" onclick="showImageInPopup(this)" data-toggle="modal" data-target="#photViewer" style="background:#eee no-repeat center center;background-image:url(@Model.Documents[i].FileName)"></div></div>
+													<div class="col-2"><div class="uplod-img my-auto photo-box shadow" id="img2_@i" onclick="showImageInPopup(this)" data-toggle="modal" data-target="#photViewer" style="background:#eee no-repeat center center;background-image:url(@Model.Documents[i].FileName2)"></div></div>
+												</div>
+											</div>
+										</div>
+										<div class='col-md-3'>
+											<div class="form-group form-group-default">
+												<label>Document No</label>
+												<input type="text" class="form-control" asp-for="Documents[i].DocumentNumber" />
+											</div>
+										</div>
+										<div class='col-md-3'>
+											<div class="form-group form-group-default">
+												<label>Expires On</label>
+												<input type="date" min="@ViewData["Today"]" class="form-control" asp-for="Documents[i].ExpiresOn" />
+											</div>
+										</div>
+									}
+
+
+
+								</div>
+                                <div class="text-right">
+                                    <button type="button" id="btnSave" class="btn btn-success">Save</button>
+                                    <partial name="_DeleteButton" />
+                                </div>
+                                <partial name="_ErrorPartial" />
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+
+
+    $(function () {
+
+        $('#btnSave').click(function (evt) {
+            setHasImageField(@Model.Documents.Count, 'DocumentFiles', 'HasFile');
+            setHasImageField(@Model.Documents.Count, 'DocumentFiles2', 'HasFile2');
+            PostForm(evt, '/@ViewData["PageURL"]?handler=save', '#formBasic', "saved");
+        });
+        saved = function (data) {
+            successMessage(data.ResponseMessage, data.ResponseTitle, '@ViewData["MasterPageURL"]');
+        }
+    });
+
+</script>

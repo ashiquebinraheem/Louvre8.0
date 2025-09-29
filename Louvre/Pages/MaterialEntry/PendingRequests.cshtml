@@ -1,0 +1,12 @@
+﻿@page "/pending-entry-requests"
+@model Louvre.Pages.PendingEntryRequestsModel
+@{
+	ViewData["Title"] = "Pending Requests";
+	ViewData["ParentMenu"] = "Material Entry";
+	ViewData["PageURL"] = "pending-entry-requests";
+	ViewData["ItemPageURL"] = "view-request";
+	ViewData["ItemIDFieldName"] = "RequestID";
+	ViewData["HideNewButton"] = true;
+}
+
+<partial name="_PaginationGrid"/>

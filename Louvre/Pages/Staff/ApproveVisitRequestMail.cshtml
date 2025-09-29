@@ -1,0 +1,35 @@
+﻿@page "/approve-visit-request-mail/{id}/{qrcode}"
+@model Louvre.Pages.ApproveVisitRequestMailModel
+@{
+    ViewData["Title"] = "Approve Visit Request";
+    Layout = "_LoginLayout";
+}
+
+
+
+<div class="container container-login animated fadeIn">
+    <h3 class="text-center">Approve Request</h3>
+    <div class="login-form">
+        @if (TempData["Success"].ToString() == "")
+        {
+            <div class='col-md-12 col-xs-12' style="padding:0;">
+                <div class="alert alert-danger" style="margin:10px 0px 10px 0px;">
+                    @TempData["Message"]
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class='col-md-12 col-xs-12' style="padding:0;">
+                <div class="alert alert-success" style="margin:10px 0px 10px 0px;">
+                    @TempData["Message"]
+                </div>
+            </div>
+
+            <span><a href="/Login"> Click  here to Login</a> </span>
+        }
+    </div>
+</div>
+
+
+

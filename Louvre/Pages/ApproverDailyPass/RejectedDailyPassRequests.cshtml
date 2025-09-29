@@ -1,0 +1,12 @@
+﻿@page "/rejected-daily-pass-request"
+@model Louvre.Pages.DailyPass.RejectedDailyPassRequestsAdminModel
+@{
+	ViewData["Title"] = "Rejected Requests";
+	ViewData["ParentMenu"] = "Scheduled Pass Request";
+	ViewData["PageURL"] = "rejected-daily-pass-request";
+	ViewData["ItemPageURL"] = "view-daily-pass-request";
+	ViewData["ItemIDFieldName"] = "DailyPassRequestID";
+	ViewData["HideNewButton"] = true;
+}
+
+<partial name="_PaginationGrid" />

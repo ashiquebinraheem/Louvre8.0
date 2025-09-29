@@ -1,0 +1,57 @@
+﻿@page "/branch/{id?}"
+@model Louvre.Pages.BranchModel
+@{
+    ViewData["Title"] = "Branch";
+    ViewData["ParentMenu"] = "Account";
+    ViewData["PageURL"] = "branch";
+    ViewData["MasterPageURL"] = "branches";
+}
+
+<div class="main-panel">
+    <div class="content">
+        <div class="page-inner">
+            <partial name="_BreadCrumb" />
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="card card-with-nav">
+                        <div class="card-header">
+                            <div class="row row-nav-line">
+                                <ul class="nav nav-tabs nav-line nav-color-secondary" role="tablist">
+                                    <li class="nav-item"> <a class="nav-link" role="tab" aria-selected="true">@ViewData["Title"] Details</a> </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <form method="post" id="formBasic" enctype="multipart/form-data">
+                                <input type="hidden" asp-for="Branch.BranchID" />
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group form-group-default">
+                                            <label>Name</label>
+                                            <input type="text" class="form-control" asp-for="Branch.BranchName" autofocus>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group form-group-default">
+                                            <label>Google Location</label>
+                                            <input type="text" class="form-control" asp-for="Branch.GoogleLocation">
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                                <div class="text-right">
+                                    <partial name="_SaveButton" />
+                                    <button type="reset" class="btn btn-danger">Reset</button>
+                                </div>
+                                <partial name="_ErrorPartial" />
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

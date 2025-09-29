@@ -1,0 +1,12 @@
+﻿@page "/new-daily-pass-requests"
+@model Louvre.Pages.Approver.NewDailyPassRequestsModel
+@{
+	ViewData["Title"] = "New Scheduled Pass Requests";
+	ViewData["PageURL"] = "new-daily-pass-requests";
+	ViewData["ParentMenu"] = "Scheduled Pass Request";
+	ViewData["ItemPageURL"] = "approve-daily-pass-request";
+	ViewData["ItemIDFieldName"] = "DailyPassRequestID";
+	ViewData["HideNewButton"] = true;
+}
+
+<partial name="_PaginationGrid" />

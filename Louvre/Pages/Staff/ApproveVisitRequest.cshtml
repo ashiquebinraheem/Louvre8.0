@@ -1,0 +1,300 @@
+﻿@page "/approve-visit-request/{id}"
+@model Louvre.Pages.ApproveVisitRequestModel
+@{
+    ViewData["Title"] = "Approve Visit Request";
+    ViewData["ParentMenu"] = "Request";
+    ViewData["PageURL"] = "approve-visit-request";
+    ViewData["MasterPageURL"] = "new-visit-requests";
+}
+
+<div class="main-panel">
+    <div class="content">
+        <div class="page-inner">
+            <partial name="_BreadCrumb" />
+            <form method="post" id="formBasic" enctype="multipart/form-data">
+                <div class="row">
+                    <div class="col-md-9">
+                        <input type="hidden" asp-for="Data.VisitRequestID" />
+
+                        <div class="card card-with-nav">
+                            <div class="card-header">
+                                <div class="row row-nav-line">
+                                    <ul class="nav nav-tabs nav-line nav-color-secondary" role="tablist">
+                                        <li class="nav-item"> <a class="nav-link" role="tab" aria-selected="true">Basic Information</a> </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card-body">
+
+                                <div class="row mt-3">
+                                    <div class="col-md-12">
+                                        <div class="form-group form-group-default">
+                                            <label>Requester</label>
+                                            <select class="form-control" asp-for="Data.EmployeeID" autofocus>
+                                                <option></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group form-group-default">
+                                            <label>Designation</label>
+                                            <input type="text" class="form-control" id="txtEmployeeDesignation" readonly />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group form-group-default">
+                                            <label>Company</label>
+                                            <input type="text" class="form-control" id="txtEmployeeCompany" readonly />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group form-group-default">
+                                            <label>Email address</label>
+                                            <input type="text" class="form-control" id="txtEmployeeEmail" readonly />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group form-group-default">
+                                            <label>Mobile No</label>
+                                            <input type="text" class="form-control" id="txtEmployeeMobile" readonly />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mt-3">
+                                    <div class="col-md-6">
+                                        <div class="form-group form-group-default">
+                                            <label>Department</label>
+                                            <select class="form-control" asp-for="Data.DepartmentID" asp-items="ViewBag.Departments">
+                                                <option></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group form-group-default">
+                                            <label>Area</label>
+                                            <select class="form-control" asp-for="Data.AreaID" asp-items="ViewBag.Areas">
+                                                <option></option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group form-group-default">
+                                            <label>Pupose</label>
+                                            <select class="form-control" asp-for="Data.PurposeID" asp-items="ViewBag.Purposes">
+                                                <option></option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group form-group-default">
+                                            <label>Meeting Date & Time</label>
+                                            <input type="datetime-local" asp-for="Data.MeetingDate" class="form-control" />
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group form-group-default">
+                                            <label>Duration</label>
+                                            <select class="form-control" asp-for="Data.DuraionID" asp-items="ViewBag.Durations">
+                                                <option></option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="col-md-6">
+                                        <div class="form-group form-group-default">
+                                            <label>Vehicle</label>
+                                            <select class="form-control" id="VehicleID" asp-for="Data.VehicleID" asp-items="ViewBag.Vehicles">
+                                                <option></option>
+                                                <option value="-1">--New--</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox" asp-for="Data.IsParkingRequired">
+                                                <span class="form-check-sign">Need Parking</span>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <div class="form-group form-group-default">
+                                            <label>Remark</label>
+                                            <textarea class="form-control" rows="3" asp-for="Data.Remark"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="card card-with-nav">
+                            <div class="card-header">
+                                <div class="row row-nav-line">
+                                    <ul class="nav nav-tabs nav-line nav-color-secondary" role="tablist">
+                                        <li class="nav-item"> <a class="nav-link" role="tab" aria-selected="true">Documents (Supported Types: Jpg, Png, Pdf)</a> </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+
+                                    @for (int i = 0; i < Model.Documents.Count; i++)
+                                    {
+
+                                        <div class="col-md-4">
+                                            <div class="card card-profile card-secondary">
+                                                <div class="card-header" id="ReqDocuments_Img_@i" onclick="showImageInPopup(this)" data-toggle="modal" data-target="#photViewer" style="background-image: url('@Model.Documents[i].FileName')">
+
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="user-profile text-center">
+                                                        <div class="job">@Model.Documents[i].DocumentTypeName</div>
+                                                        <div class="job">@Model.Documents[i].DocumentNumber</div>
+
+                                                        @if (@Model.Documents[i].ExpiresOn != null)
+                                                        {
+                                                            if (@Model.Documents[i].ExpiresOn.Value < DateTime.UtcNow)
+                                                            {
+                                                                <div class="desc" style="color:red;">
+                                                                    @Model.Documents[i].ExpiresOn.Value.ToShortDateString()
+                                                                </div>
+                                                            }
+                                                            else
+                                                            {
+                                                                <div class="desc">
+                                                                    @Model.Documents[i].ExpiresOn.Value.ToShortDateString()
+                                                                </div>
+                                                            }
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card card-with-nav" id="divButtons">
+                            <div class="card-body">
+                                <div class="text-right mt-3 mb-3">
+                                    <button type="button" id="btnApprove" class="btn btn-success">Approve</button>
+                                    <button type="button" id="btnDoReject" class="btn btn-danger">Reject</button>
+                                </div>
+                                <partial name="_ErrorPartial" />
+                            </div>
+                        </div>
+
+
+
+
+                        <div class="modal fade" id="rejectPopup" tabindex="-1" role="dialog" aria-labelledby="newRejectPopupLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Do you want to Reject the application?</h4>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group form-group-default">
+                                                    <label>Reason</label>
+                                                    <textarea class="form-control" asp-for="Data.RejectReason"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                        <input type="button" id="btnReject" value="Confirm Reject" class="btn btn-success" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<script>
+
+    //#region Global Variables
+
+    var employees = [], vehicles = [], companyDocumentCount=0;
+
+
+    //#endregion
+
+    $(function () {
+
+        $(document).ready(function () {
+
+            employees =@Html.Raw(Json.Serialize(ViewData["Employees"]));
+            fillCombo('Data_EmployeeID', 'EmployeeID', 'EmployeeName', employees, '<-Select One->', true);
+
+            var requestData =@Html.Raw(Json.Serialize(Model.Data));
+            if (requestData != null) {
+                $("#Data_EmployeeID").val(requestData.EmployeeID);
+                $("#Data_EmployeeID").change();
+            }
+        });
+
+
+        $('#btnApprove').click(function (evt) {
+            PostForm(evt, '/@ViewData["PageURL"]/1?handler=approve', '#formBasic', "saved");
+        });
+
+        saved = function (data) {
+            successMessage(data.ResponseMessage, data.ResponseTitle,'@ViewData["MasterPageURL"]');
+        }
+
+        $("#btnDoReject").click(function () {
+            $("#rejectPopup").modal('show');
+        });
+
+        $('#btnReject').click(function (evt) {
+            PostForm(evt, '/@ViewData["PageURL"]/1?handler=reject', '#formBasic', "rejected");
+        });
+
+        rejected = function (data) {
+            successMessage(data.ResponseMessage, data.ResponseTitle,'@ViewData["MasterPageURL"]');
+        }
+
+
+        $("#Data_EmployeeID").change(function () {
+            if ($("#Data_EmployeeID").val() != "0") {
+                var employee = getRowByFieldNameValue(employees, "EmployeeID", $("#Data_EmployeeID").val());
+
+                $("#txtEmployeeDesignation").val(employee.DesignationName);
+                $("#txtEmployeeCompany").val(employee.CompanyName);
+                $("#txtEmployeeEmail").val(employee.Email);
+                $("#txtEmployeeMobile").val(employee.ContactNumber);
+                $("#CompanyID").val(employee.CompanyID)
+            }
+        });
+
+        $("#Data_EmployeeID").blur(function () {
+            $("#Data_EmployeeID").change();
+        })
+    });
+
+</script>
+

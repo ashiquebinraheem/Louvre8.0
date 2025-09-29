@@ -1,0 +1,228 @@
+﻿
+.input-validation-error {
+    background-color: #ffe6e6 !important;
+}
+
+.photo-box {
+    -webkit-background-size: cover !important;
+    opacity: 0.7;
+    -moz-background-size: cover !important;
+    -o-background-size: cover !important;
+    cursor: pointer;
+    background-size: cover !important;
+    height: 35px;
+    border-radius: 100%;
+    overflow: hidden;
+    border: solid thin #ddd;
+    width: 35px;
+    /*position: absolute;*/
+    top: 17px;
+    right: 16px;
+    bottom: auto;
+    margin-right: 10px;
+}
+
+.file-upload .switch {
+    position: relative;
+    top: 14px;
+    left: 5px;
+    color: #999;
+    font-size: 13px;
+    max-width: 68%;
+    line-height: 23px;
+}
+
+    .file-upload .switch i {
+        color: #D5D5D5;
+        padding-right: 5px;
+    }
+
+.file-upload .file-input {
+    opacity: 0;
+    cursor: pointer;
+}
+
+.photo-box:hover {
+    opacity: 1;
+    -webkit-transition: opacity 0.5s;
+    transition: opacity 0.5s;
+}
+
+@media (max-width: 999px) {
+    .file-upload .switch {
+        left: 15px;
+        max-width: 60%;
+    }
+}
+
+@media (min-width: 576px) {
+    .modal-dialog {
+        max-width: 700px;
+        margin: 1.75rem auto;
+    }
+}
+
+
+.main-header[data-background-color] .logo-header {
+    background-color: white !important;
+    border-bottom: .5px solid #464646;
+}
+
+.main-header[data-background-color] .btn-minimize {
+    color: #464646 !important;
+}
+
+.main-header[data-background-color=purple] .navbar-header {
+    background: #464646 !important;
+}
+
+.btn-primary {
+    background: #464646 !important;
+    border-color: #464646 !important;
+}
+
+
+.btn-link {
+    border: 0 !important;
+    background: 0 0 !important;
+}
+
+    .btn-link.btn-primary {
+        color: #464646 !important;
+    }
+
+        .btn-link.btn-primary:hover {
+            color: #000 !important;
+        }
+
+.page-item.active .page-link {
+    background-color: #464646;
+    border-color: #464646;
+}
+
+.sidebar .nav > .nav-item a:focus i, .sidebar .nav > .nav-item a:hover i {
+    color: #464646 !important;
+}
+
+.sidebar .nav > .nav-item a[data-toggle=collapse][aria-expanded=true] i {
+    color: #464646 !important;
+}
+
+
+.table-head-bg-info thead {
+    border: 1px solid #464646 !important;
+}
+
+    .table-head-bg-info thead th, .table-striped-bg-info tbody tr:nth-of-type(odd) {
+        background: #464646 !important;
+    }
+
+.table-bordered-bd-info td, .table-bordered-bd-info th {
+    border: 1px solid #464646 !important;
+}
+
+.login-bg-screen {
+    background-image: url(../../assets/img/login-bg.jpg);
+    height: 100vh;
+    background-size: cover;
+}
+
+
+select.form-control:not([size]):not([multiple]) {
+    height: calc(2.25rem + 5px);
+}
+
+.loading {
+    position: fixed !important;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    /*display: flex;*/
+    justify-content: center !important;
+    align-items: center !important;
+    z-index: 999999;
+    top: 0;
+    background: rgba(255,255,255,0.9);
+}
+
+.card-profile.card-secondary .card-header {
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+
+
+
+
+
+.image-upload > input {
+    display: none !important;
+}
+
+.image-upload img {
+    width: 80px;
+    cursor: pointer;
+}
+
+.document-upload {
+    height: 75px;
+    background: #FFFFFF;
+    border: 1px solid #C5C5C5;
+    box-sizing: border-box;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.08);
+    border-radius: 6px;
+}
+
+    .document-upload .doc-type {
+        display: flex;
+        text-align: center;
+    }
+
+
+.doc-info {
+    height: 75px;
+    background: #FFFFFF;
+    border: 1px solid #C5C5C5;
+    box-sizing: border-box;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.08);
+    border-radius: 6px;
+}
+
+    .doc-info input {
+        outline: none !important;
+        border: none !important;
+    }
+
+.uplod-text {
+    color: #999;
+    font-size: 13px !important;
+    text-transform: capitalize !important;
+}
+
+
+
+
+.document-label {
+    padding-top: 7px;
+}
+
+.image-holder {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    position: relative;
+    margin: 15px 15px 0px 0px;
+    border-radius: 10px;
+}
+
+    .image-holder-span {
+        width: 100%;
+        height: 19px;
+        color: red;
+        font-weight: 600;
+    }
+
+        .image-holder-span i {
+            color: red;
+            font-size: 12px;
+        }

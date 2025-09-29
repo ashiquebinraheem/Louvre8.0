@@ -1,0 +1,12 @@
+﻿@page "/accepted-entry-requests"
+@model Louvre.Pages.AcceptedEntryRequestsModel
+@{
+	ViewData["Title"] = "Accepted Requests";
+	ViewData["ParentMenu"] = "Material Entry";
+	ViewData["PageURL"] = "accepted-entry-requests";
+	ViewData["ItemPageURL"] = "view-request";
+	ViewData["ItemIDFieldName"] = "RequestID";
+	ViewData["HideNewButton"] = true;
+}
+
+<partial name="_PaginationGrid"/>

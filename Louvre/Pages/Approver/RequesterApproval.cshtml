@@ -1,0 +1,224 @@
+﻿@page "/approve-requester/{id}"
+@model Louvre.Pages.RequesterApprovalModel
+@{
+    ViewData["Title"] = "Approve Requester";
+    ViewData["ParentMenu"] = "Account";
+    ViewData["PageURL"] = "approve-requester";
+    ViewData["MasterPageURL"] = "new-requesters";
+}
+
+
+<div class="main-panel">
+    <div class="content">
+        <div class="page-inner">
+            <partial name="_BreadCrumb" />
+
+
+            <form method="post" id="formBasic" enctype="multipart/form-data">
+
+                <div class="row">
+                    <div class="col-md-9">
+
+                        <div class="card card-with-nav">
+                            <div class="card-header">
+                                <div class="row row-nav-line">
+                                    <ul class="nav nav-tabs nav-line nav-color-secondary" role="tablist">
+                                        <li class="nav-item"> <a class="nav-link" role="tab" aria-selected="true">@ViewData["Title"]</a> </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <input type="hidden" asp-for="UserData.UserID" />
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-check">
+                                            <label class="form-radio-label">
+                                                <input class="form-radio-input" type="radio" asp-for="UserData.UserTypeID" value="8" onclick="companySelected();">
+                                                <span class="form-radio-sign"><b>Company</b></span>
+                                            </label>
+                                            <label class="form-radio-label ml-3">
+                                                <input class="form-radio-input" type="radio" asp-for="UserData.UserTypeID" value="9" onclick="individualSelected();">
+                                                <span class="form-radio-sign"><b>Individual</b></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6" id="divPerson" style="display:none">
+                                        <div class="form-group">
+                                            <label for="txtName" class="placeholder"><b>Name</b></label>
+                                            <input asp-for="PersonalInfo.FirstName" id="txtName" readonly type="text" class="form-control" autofocus>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="txtCompany" class="placeholder"><b>Company Name</b></label>
+                                            <input asp-for="Company.CompanyName" id="txtCompany" readonly type="text" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <labels for="PersonalInfo_Email1" class="placeholder"><b>Email</b></labels>
+                                            <input type="email" class="form-control" asp-for="PersonalInfo.Email1" readonly onfocus="this.removeAttribute('readonly');">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="PersonalInfo_Phone1" class="placeholder"><b>Mobile</b></label>
+                                            <input type="tel" class="form-control" asp-for="PersonalInfo.Phone1" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="Type" class="placeholder"><b>Type</b></label>
+                                            <input type="hidden" asp-for="UserModule.UserModuleID" />
+                                            <select class="form-control" id="cmbModule" asp-for="UserModule.ModuleID" asp-items="ViewBag.Modules">
+                                            </select>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+
+
+                            </div>
+                        </div>
+
+                        <div class="card card-with-nav">
+                            <div class="card-header">
+                                <div class="row row-nav-line">
+                                    <ul class="nav nav-tabs nav-line nav-color-secondary" role="tablist">
+                                        <li class="nav-item"> <a class="nav-link" role="tab" aria-selected="true">Documents (Supported Types: Jpg, Png, Pdf)</a> </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+
+                                    @for (int i = 0; i < Model.Documents.Count; i++)
+                                    {
+
+                                        <div class="col-md-4">
+                                            <div class="card card-profile card-secondary">
+
+                                                <div class="card-header" id="ReqDocuments_Img_@i" onclick="showImageInPopup(this)" data-toggle="modal" data-target="#photViewer" style="background-image: url('@Model.Documents[i].FileName'), url('/default/img/pdf.png')">
+                                                </div>
+
+
+                                                <div class="card-body">
+                                                    <div class="user-profile text-center">
+                                                        <div class="job">@Model.Documents[i].DocumentTypeName</div>
+                                                        <div class="job">@Model.Documents[i].DocumentNumber</div>
+
+                                                        @if (@Model.Documents[i].ExpiresOn != null)
+                                                        {
+                                                            if (@Model.Documents[i].ExpiresOn.Value < DateTime.UtcNow)
+                                                            {
+                                                                <div class="desc" style="color:red;">
+                                                                    @Model.Documents[i].ExpiresOn.Value.ToShortDateString()
+                                                                </div>
+                                                            }
+                                                            else
+                                                            {
+                                                                <div class="desc">
+                                                                    @Model.Documents[i].ExpiresOn.Value.ToShortDateString()
+                                                                </div>
+                                                            }
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @if (!string.IsNullOrEmpty(Model.Documents[i].FileName2))
+                                        {
+                                            <div class="col-md-4">
+                                                <div class="card card-profile card-secondary">
+
+                                                    <div class="card-header" id="ReqDocuments_Img2_@i" onclick="showImageInPopup(this)" data-toggle="modal" data-target="#photViewer" style="background-image: url('@Model.Documents[i].FileName2'), url('/default/img/pdf.png')">
+                                                    </div>
+
+                                                    <div class="card-body">
+                                                        <div class="user-profile text-center">
+                                                            <div class="job">@Model.Documents[i].DocumentTypeName</div>
+                                                            <div class="job">@Model.Documents[i].DocumentNumber</div>
+
+                                                            @if (@Model.Documents[i].ExpiresOn != null)
+                                                            {
+                                                                if (@Model.Documents[i].ExpiresOn.Value < DateTime.UtcNow)
+                                                                {
+                                                                    <div class="desc" style="color:red;">
+                                                                        @Model.Documents[i].ExpiresOn.Value.ToShortDateString()
+                                                                    </div>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <div class="desc">
+                                                                        @Model.Documents[i].ExpiresOn.Value.ToShortDateString()
+                                                                    </div>
+                                                                }
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card card-with-nav">
+                            <div class="card-body">
+                                <partial name="_MessagePartial" />
+                                <div class="text-right">
+                                    <button type="button" id="btnAccept" class="btn btn-primary">Accept</button>
+                                    <button type="button" id="btnReject" class="btn btn-danger">Reject</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(function () {
+
+        $(document).ready(function () {
+            var userData=@Html.Raw(Json.Serialize(Model.UserData));
+            if (userData.UserTypeID == "8")
+                companySelected();
+            else
+                individualSelected();
+
+        });
+
+        companySelected = function () {
+            $('#divPerson').hide();
+            $('#txtCompany').focus();
+            $('#txtName').removeAttr('required');
+        };
+
+        individualSelected = function () {
+            $('#divPerson').show();
+            $('#txtName').focus();
+            $('#txtName').attr('required', true);
+        };
+
+
+        $('#btnAccept').click(function (evt) {
+            PostForm(evt, '/@ViewData["PageURL"]/1?handler=accept', '#formBasic', "saved");
+        });
+
+         $('#btnReject').click(function (evt) {
+            PostForm(evt, '/@ViewData["PageURL"]/1?handler=reject', '#formBasic', "saved");
+        });
+
+        saved = function (data) {
+            successMessage(data.ResponseMessage, data.ResponseTitle,'@ViewData["MasterPageURL"]');
+        }
+    });
+</script>

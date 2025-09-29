@@ -1,0 +1,128 @@
+﻿@page "/sub-branch"
+@model Progbiz.SubBranchModel
+@{
+    ViewData["Title"] = "Sub Company";
+   
+    ViewData["PageURL"] = "sub-branch";
+    ViewData["MasterPageURL"] = "sub-branch";
+    ViewData["ParentMenu"] = "Master";
+}
+
+<div class="main-panel">
+    <div class="content">
+        <div class="page-inner">
+            <partial name="_BreadCrumb" />
+            <div class="row">
+                <div class="col-md-10">
+                    <div class="card card-with-nav">
+                        <div class="card-header">
+                            <div class="row row-nav-line">
+                                <ul class="nav nav-tabs nav-line nav-color-secondary" role="tablist">
+                                    <li class="nav-item"> <a class="nav-link" role="tab" aria-selected="true">@ViewData["Title"]</a> </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <form method="post" id="formBasic" enctype="multipart/form-data">
+
+                                <div class='overflow-table'>
+                                    <table id="gridFields" class="table table-bordered table-head-bg-info table-bordered-bd-info" role="grid" aria-describedby="add-row_info">
+                                        <thead>
+                                            <tr>
+                                                <th>Sub Company Name</th>
+                                                <th>Company</th>
+                                                <th>Google Location</th>
+                                                <th style="width:10px"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @for (int i = 0; i < Model.Data.Count(); i++)
+                                            {
+                                            <tr>
+                                                <td>
+                                                    <input type="hidden" asp-for="Data[i].BranchID" />
+                                                    <input class="form-control" type="text" asp-for="Data[i].BranchName">
+                                                </td>
+                                                <td>
+                                                    <select class="form-control" asp-for="Data[i].ParentBranchID" asp-items="ViewBag.Branches"></select>
+                                                </td>
+                                                <td>
+                                                    <input class="form-control" type="text" asp-for="Data[i].GoogleLocation">
+                                                </td>
+                                                <td style="width:10px">
+                                                    <a onclick="removeTableRow(this,$(this).closest('table').attr('id'))"><span class="fa fa-trash"></span></a>
+                                                </td>
+                                            </tr>
+                                            }
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td>
+                                                    <input class="form-control" type="text" id="txtName">
+                                                </td>
+                                                <td>
+                                                    <select class="form-control" id="cmbParentBranch" asp-items="ViewBag.Branches">
+                                                        <option></option>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <input class="form-control" type="text" id="GoogleLocation">
+                                                </td>
+                                                <td style="width:10px">
+                                                    <a class="" onclick="addItem($(this).closest('table').attr('id'));"><i class="fa fa-plus-circle"></i></a>
+                                                </td>
+
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                                <div class="text-right mt-3 mb-3">
+                                    <partial name="_SaveButton" />
+                                </div>
+                                <partial name="_ErrorPartial" />
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    var gridFields = [
+        {
+            FieldType: "text",
+            FieldName: "BranchName",
+            ControlName: "txtName",
+            Required: "required"
+        },
+        {
+            FieldType: "select",
+            FieldName: "ParentBranchID",
+            ControlName: "cmbParentBranch",
+            Required: "required"
+        },
+        {
+            FieldType: "text",
+            FieldName: "GoogleLocation",
+            ControlName: "GoogleLocation",
+            Required: "required"
+        },
+        {
+            FieldType: "hidden",
+            FieldName: "BranchID",
+        },
+    ];
+
+    $(function () {
+
+        addItem = function (tableId) {
+            addTableRow(tableId, 'Data', gridFields);
+            $("#txtName").focus();
+        };
+    });
+
+</script>

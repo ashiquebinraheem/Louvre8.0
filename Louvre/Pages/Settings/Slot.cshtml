@@ -1,0 +1,179 @@
+﻿@page "/slot/{id}"
+@model Louvre.Pages.SlotModel
+@{
+    ViewData["Title"] = "Slot";
+    ViewData["ParentMenu"] = "Settings";
+    ViewData["PageURL"] = "slot";
+    ViewData["MasterPageURL"] = "slots";
+}
+
+<div class="main-panel">
+    <div class="content">
+        <div class="page-inner">
+            <partial name="_BreadCrumb" />
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="card card-with-nav">
+                        <div class="card-header">
+                            <div class="row row-nav-line">
+                                <ul class="nav nav-tabs nav-line nav-color-secondary" role="tablist">
+                                    <li class="nav-item"> <a class="nav-link" role="tab" aria-selected="true">@ViewData["Title"] Details</a> </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <form method="post" id="formBasic" enctype="multipart/form-data">
+                                <input type="hidden" asp-for="Data.SlotMasterID" />
+                                <input type="hidden" asp-for="Data.SlotGroupID" />
+                                <input type="hidden" asp-for="Data.BranchID" />
+                                <div class="row mt-3">
+                                    <div class="col-md-6">
+                                        <div class="form-group form-group-default">
+                                            <label>Date</label>
+                                            <input type="date" class="form-control" asp-for="Data.Date" autofocus disabled>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 overflow-table">
+                                        <table id="gridFields" class="table table-bordered table-head-bg-info table-bordered-bd-info mt-4" role="grid" aria-describedby="add-row_info">
+                                            <thead>
+                                                <tr>
+                                                    <th>Time From</th>
+                                                    <th>Time To</th>
+                                                    <th>Request Count</th>
+                                                    <th>Requested Count</th>
+                                                    <th style="width:10px"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @for (int i = 0; i < Model.Items.Count(); i++)
+                                                {
+                                                    <tr>
+                                                        <td>
+                                                            <input type="hidden" asp-for="Items[i].SlotID" />
+                                                            <input class="form-control" type="time" asp-for="Items[i].TimeFrom">
+                                                        </td>
+                                                        <td>
+                                                            <input class="form-control" type="time" asp-for="Items[i].TimeTo">
+                                                        </td>
+                                                        <td>
+                                                            <input class="form-control number" type="text" id="RequestCount_@i" asp-for="Items[i].RequestCount" onchange="checkCount(@i)">
+                                                        </td>
+                                                        <td>
+                                                            <input class="form-control number" type="text" id="RequestedCount_@i" asp-for="Items[i].RequestedCount" readonly>
+                                                        </td>
+                                                        <td style="width:10px">
+                                                            @if (Model.Items[i].RequestedCount == 0)
+                                                            {
+                                                            <a onclick="removeTableRow(this,$(this).closest('table').attr('id'))"><span class="fa fa-trash"></span></a>
+                                                            }
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <td>
+                                                        <input class="form-control" type="time" id="TimeFrom">
+                                                    </td>
+                                                    <td>
+                                                        <input class="form-control" type="time" id="TimeTo">
+                                                    </td>
+                                                    <td>
+                                                        <input class="form-control number" type="text" id="RequestCount">
+                                                    </td>
+                                                    <td><input type="hidden" id="RequestedCount" value="0"></td>
+                                                    <td style="width:10px">
+                                                        <a class="" onclick="addItem($(this).closest('table').attr('id'));"><i class="fa fa-plus-circle"></i></a>
+                                                    </td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="text-right mt-3 mb-3">
+                                    <button type="button" id="btnSave" class="btn btn-success">Save</button>
+                                    <button type="button" id="btnDelete" class="btn btn-danger">Delete</button>
+                                </div>
+                                <partial name="_ErrorPartial" />
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+
+    var gridFields = [
+        {
+            FieldType: "text",
+            FieldName: "TimeFrom",
+            ControlName: "TimeFrom",
+            Required:"required"
+        },
+        {
+            FieldType: "text",
+            FieldName: "TimeTo",
+            ControlName: "TimeTo",
+            Required:"required"
+        },
+        {
+            FieldType: "text",
+            FieldName: "RequestCount",
+            ControlName: "RequestCount",
+            Required:"required"
+        },
+        {
+            FieldType: "text",
+            FieldName: "RequestCount",
+            ControlName: "RequestedCount",
+            Attributes:"readonly"
+        },
+        {
+            FieldType: "hidden",
+            FieldName: "SlotGroupItemID",
+        },
+    ];
+
+    $(function () {
+
+        addItem = function (tableId) {
+            addTableRow(tableId, 'Items', gridFields);
+            $("#TimeFrom").focus();
+        };
+
+        checkCount=function(id)
+        {
+            if (parseFloat($(`#RequestCount_` + id).val()) < parseFloat($(`#RequestedCount_`+id).val())) {
+                errorMessage("Slot already requested exceed")
+                {
+                    $(`#RequestCount_` + id).val($(`#RequestedCount_` + id).val());
+                }
+            }
+        };
+
+
+        $('#btnSave').click(function (evt) {
+            PostForm(evt, '/@ViewData["PageURL"]/1?handler=save', '#formBasic', "saved");
+        });
+
+        saved = function (data) {
+            successMessage(data.ResponseMessage, data.ResponseTitle,'@ViewData["MasterPageURL"]');
+        }
+
+        $('#btnDelete').click(function (evt) {
+            if (confirm('Are you sure you want to delete?')) {
+                PostForm(evt, '/@ViewData["PageURL"]/1?handler=delete', '#formBasic', "deleted");
+            }
+        });
+
+        deleted = function () {
+            window.location.href = '/@ViewData["MasterPageURL"]';
+        }
+    });
+
+</script>

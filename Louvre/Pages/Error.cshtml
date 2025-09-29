@@ -1,0 +1,24 @@
+﻿@page
+@model ErrorModel
+@{
+    Layout = "_Layout";
+    var code = Model.StatusCode ?? 0;
+    ViewData["Title"] = code > 0 ? $"Error {code}" : "Error";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+@if (!string.IsNullOrEmpty(Model.Message))
+{
+    <p>@Model.Message</p>
+}
+else
+{
+    <p>Sorry, something went wrong.</p>
+}
+
+@if (Model.ShowDetails && Model.Exception != null)
+{
+    <h3>Exception Details:</h3>
+    <pre>@Model.Exception.ToString()</pre>
+}
