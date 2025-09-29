@@ -63,7 +63,7 @@ var connectionString = configuration["DBSettingKey"] switch
 {
     "production" => "Data source=.;Initial Catalog=LouvreNewlat;user id=sa;password=P@ssw0rd123;integrated security=false;",
     "test" => "Data source=.;Initial Catalog=LouvreNewlat;user id=sa;password=P@ssw0rd123;integrated security=false;",
-    "dev-test" => "Data Source=157.250.197.179;Initial Catalog=_Lvr;User ID=LVR;Password=Ashique@2025;Encrypt=True;TrustServerCertificate=True;",
+    "dev-test" => "Data Source=192.64.87.146;Initial Catalog=_Lvr;User ID=LVR;Password=Ashique@2025;Encrypt=True;TrustServerCertificate=True;",
     _ => "Server=ASHIQUE-PC\\SQLEXPRESS;Database=Louvre;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True"
 };
 
