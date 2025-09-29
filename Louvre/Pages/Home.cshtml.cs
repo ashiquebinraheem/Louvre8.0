@@ -357,7 +357,7 @@ namespace Louvre.Pages
 
         public async Task<IActionResult> OnPostGetRequestsDetailAsync()
         {
-            var clientTime = GetClientTime(_httpContextAccessor);
+            var clientTime = GetClientTime(_httpContextAccessor).Date;
             string query = "";
             if (User.IsInRole("Approver") || User.IsInRole("Disposal"))
             {
@@ -432,7 +432,7 @@ namespace Louvre.Pages
 
         public async Task<IActionResult> OnPostGetDailyPassRequestsDetailAsync()
         {
-            var clientTime = GetClientTime(_httpContextAccessor);
+            var clientTime = GetClientTime(_httpContextAccessor).Date;
             string query = "";
             if (User.IsInRole("Approver") || User.IsInRole("Disposal"))
             {
@@ -471,7 +471,7 @@ namespace Louvre.Pages
 
         public async Task<IActionResult> OnPostGetCheckinDetailsAsync()
         {
-            var clientTime = GetClientTime(_httpContextAccessor);
+            var clientTime = GetClientTime(_httpContextAccessor).Date;
 
             string where = "";
             switch (CheckinStatus)
